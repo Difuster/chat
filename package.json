@@ -1,0 +1,29 @@
+{
+  "name": "frontend-project-lvl4",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/Difuster/frontend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Difuster/frontend-project-lvl4/actions)",
+  "type": "module",
+  "main": "index.js",
+  "proxy": "http://localhost:5001",
+  "scripts": {
+    "start": "npx start-server -s ./frontend/build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Difuster/frontend-project-lvl4.git"
+  },
+  "author": "Dmitry Bespalko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Difuster/frontend-project-lvl4/issues"
+  },
+  "homepage": "https://github.com/Difuster/frontend-project-lvl4#readme",
+  "dependencies": {
+    "@hexlet/chat-server": "^1.1.6",
+    "eslint-plugin-jest": "^26.8.2"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.30.1"
+  }
+}
