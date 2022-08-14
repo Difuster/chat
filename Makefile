@@ -2,4 +2,4 @@ lint:
 	npx eslint .
 
 start:
-  npm start
+	npm start
