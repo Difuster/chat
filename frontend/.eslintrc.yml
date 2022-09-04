@@ -26,3 +26,8 @@ rules:
   functional/no-throw-statement: 0
   react/function-component-definition: 0
   react/jsx-no-constructed-context-values: 0
+  import/no-named-as-default: 0
+  import/no-named-as-default-member: 0
+  arrow-body-style: 0
+  no-param-reassign: 0
+  max-len: 0
