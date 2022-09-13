@@ -1,19 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
-import uniqid from 'uniqid';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import {
-  Modal, Form, Button
-} from 'react-bootstrap';
+import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
-import { addChannel } from '../slices/channelsSlice.js';
-import { getCurrentId } from '../slices/currentChannelIdSlice.js';
+import { renameChannel } from '../slices/channelsSlice.js';
 
-const AddChannelModal = (props) => {
+const RenameChannelModal = (props) => {
   const toast = useToast();
-  const { t } = useTranslation('translation', { keyPrefix: 'modals.addChannel' });
+  const { t } = useTranslation('translation', { keyPrefix: 'modals.renameChannel' });
   const [err, setErr] = useState(false);
   const dispatch = useDispatch();
 
@@ -34,18 +30,17 @@ const AddChannelModal = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      channel: '',
+      channel: props.items.name,
     },
     onSubmit: (values) => {
-      const id = uniqid();
+      const { id } = props.items;
       const name = values.channel;
       validateChannelName(name, props.items.channelsNames)
         .then((channelName) => {
-          dispatch(addChannel({ name: channelName, id }));
-          dispatch(getCurrentId(id));
+          dispatch(renameChannel({ name: channelName, id }));
           values.channel = '';
           props.onHide();
-          toast.notify(t('channel is added'));
+          toast.notify(t('channel is renamed'));
           setErr(false);
         })
         .catch((error) => {
@@ -57,17 +52,17 @@ const AddChannelModal = (props) => {
   const inputRef = useRef();
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current.select();
   }, []);
 
   return (
     <Modal show>
       <Modal.Header closeButton onHide={props.onHide}>
-        <Modal.Title>{t('add channel')}</Modal.Title>
+        <Modal.Title>{t('rename')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <Form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
           <Form.Group>
             <Form.Control
               ref={inputRef}
@@ -77,7 +72,6 @@ const AddChannelModal = (props) => {
               value={formik.values.channel}
               data-testid="input-channel"
               name="channel"
-              id="channel"
             />
             {
               err
@@ -85,14 +79,14 @@ const AddChannelModal = (props) => {
                 : <br />
             }
             <div className="d-flex justify-content-end">
-              <Button className="me-2" type="button" variant="secondary" onClick={props.onHide}>{t('cancel')}</Button>
-              <Button type="submit" variant="primary">{t('add')}</Button>
+              <Button className="me-2" type="button" variant="secondary" onClick={() => props.onHide()}>{t('cancel')}</Button>
+              <Button type="submit" variant="primary">{t('confirm')}</Button>
             </div>
           </Form.Group>
-        </Form>
+        </form>
       </Modal.Body>
     </Modal>
   );
 };
 
-export default AddChannelModal;
+export default RenameChannelModal;

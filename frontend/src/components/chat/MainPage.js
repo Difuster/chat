@@ -1,20 +1,21 @@
+import React, { useEffect, useState, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { Container, Row } from 'react-bootstrap';
+
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import React, { useEffect, useState, useContext } from 'react';
-import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
-// Хуки находятся в react-redux
-import { useSelector, useDispatch } from 'react-redux';
-import { Container, Row, Col } from 'react-bootstrap';
-// Импортируем нужные действия
+
 import Channels from './Channels';
+import Messages from './Messages';
 import { loadChannels } from '../../slices/channelsSlice.js';
 import { getCurrentId } from '../../slices/currentChannelIdSlice.js';
 import { loadMessages, addMessage } from '../../slices/messagesSlice.js';
 import AddChannelModal from '../../modal/addChannel';
+import RenameChannelModal from '../../modal/renameChannel';
+import RemoveChannelModal from '../../modal/removeChannel';
 import AuthContext from '../../contexts/index.jsx';
 import routes from '../../routes';
-import sendMessageIcon from '../../imgs/send_message.png';
 
 const getAuthHeader = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -26,41 +27,52 @@ const getAuthHeader = () => {
   return {};
 };
 
-const renderModal = (modal, hideModal) => {
+const renderModal = (modal, hideModal, items) => {
+  let modalToRender;
   if (!modal) {
-    return null;
+    modalToRender = null;
   }
 
-  return <AddChannelModal onHide={hideModal} />;
+  if (modal === 'addChannel') {
+    modalToRender = <AddChannelModal onHide={hideModal} items={items}/>;
+  }
+
+  if (modal === 'renameChannel') {
+    modalToRender = <RenameChannelModal onHide={hideModal} items={items}/>;
+  }
+
+  if (modal === 'removeChannel') {
+    modalToRender = <RemoveChannelModal onHide={hideModal} items={items}/>;
+  }
+
+  return modalToRender;
 };
 
 function MainPage() {
-  const [modalType, setModalType] = useState(null);
-  const currentChannelName = useSelector((state) => state.currentChannelId.name);
-  const currentChannelId = useSelector((state) => state.currentChannelId.id);
-
   const dispatch = useDispatch();
   const socket = io();
-  // Вытаскиваем данные из хранилища. state – все состояние
+
+  const { loggedIn } = useContext(AuthContext);
+  const [modalType, setModalType] = useState(null);
+  const [modalItems, setModalItems] = useState(null);
+
+  const channels = useSelector((state) => state.channels.channels);
+  const currentChannelName = useSelector((state) => state.currentChannelId.name);
+  const currentChannelId = useSelector((state) => state.currentChannelId.id);
   const messages = useSelector((state) => state.messages.messages);
 
   const getUserName = () => {
-    const data = localStorage.getItem('userId');
-    const name = JSON.parse(data).username;
+    const userId = localStorage.getItem('userId');
+    const name = JSON.parse(userId).username;
     return name;
   };
 
   const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
   const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
 
-  // Возвращает метод store.dispatch() текущего хранилища
-  const { loggedIn } = useContext(AuthContext);
-  const navigate = useNavigate();
-
   useEffect(() => {
     const fetchContent = async () => {
       const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-      socket.on('connect', () => console.log(socket));
       dispatch(loadChannels(data.channels));
       dispatch(getCurrentId(data.currentChannelId));
       dispatch(loadMessages(data.messages));
@@ -69,26 +81,9 @@ function MainPage() {
     fetchContent();
   }, []);
 
-  if (!loggedIn) {
-    return navigate('/login');
-  }
-
-  const formik = useFormik({
-    initialValues: {
-      message: '',
-    },
-    onSubmit: (values) => {
-      const messageData = {
-        value: values.message,
-        user: getUserName(),
-        channelId: currentChannelId,
-      };
-      socket.emit('newMessage', messageData);
-    },
-  });
-
   useEffect(() => {
     socket.on('newMessage', (data) => {
+      console.log(data);
       dispatch(addMessage(data));
     });
   }, []);
@@ -97,55 +92,53 @@ function MainPage() {
     setModalType(null);
   };
 
-  const renderMessages = (msgs) => msgs.map((m) => {
-    return (
-      <div key={m.id}>
-        <span>
-          {m.user}: {m.value}
-        </span>
-        <br />
-      </div>
-    );
-  });
-
-  const handleAddChannel = (e) => {
+  const showModal = (e) => {
     e.preventDefault();
     setModalType('addChannel');
+    const channelsNames = channels.map((channel) => channel.name);
+    setModalItems({ channelsNames });
   };
+
+  const handleSendMessage = (msg) => {
+    socket.emit('newMessage', msg);
+  };
+
+  const handleRemoveChannel = (id) => {
+    setModalType('removeChannel');
+    setModalItems({ id });
+  };
+
+  const handleRenameChannel = (id, name) => {
+    setModalType('renameChannel');
+    const channelsNames = channels.map((channel) => channel.name);
+    setModalItems({ id, name, channelsNames });
+  };
+
+  if (!loggedIn) {
+    return <Navigate to='login' />;
+  }
 
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
       <Row className="h-100 bg-white flex-md-row">
-        <Channels handleAddChannel={handleAddChannel}/>
-        <Col className="p-0 h-100">
-          <div className="d-flex flex-column h-100">
-            <div className="bg-light mb-4 p-3 shadow-sm small">
-              <p className="m-0">
-                <b>{currentChannelName}</b>
-              </p>
-              <span className="text-muted">{currentChannelMessages.length} сообщений</span>
-            </div>
-            <div id="messages-box" className="chat-messages overflow-auto px-5">
-              {renderMessages(currentChannelMessages)}
-            </div>
-            <div className="mt-auto px-5 py-3">
-              <form novalidate="" className="py-1 border rounded-2" onSubmit={formik.handleSubmit}>
-                <div className="input-group has-validation">
-                  <input name="message"
-                    aria-label="Новое сообщение"
-                    placeholder="Введите сообщение..."
-                    className="border-0 p-0 ps-2 form-control"
-                    value={formik.values.message}
-                    onChange={formik.handleChange}/>
-                  <button type="submit" disabled="" className="btn btn-group-vertical">
-                    <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} /></span>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </Col>
-        {renderModal(modalType, closeModal)}
+
+        <Channels
+          channels={channels}
+          currentChannelId={currentChannelId}
+          showModal={showModal}
+          handleRemoveChannel={handleRemoveChannel}
+          handleRenameChannel={handleRenameChannel}
+        />
+
+        <Messages
+          currentChannelName={currentChannelName}
+          currentChannelId={currentChannelId}
+          currentChannelMessages={currentChannelMessages}
+          getUserName={getUserName}
+          handleSendMessage={handleSendMessage}
+        />
+
+        {renderModal(modalType, closeModal, modalItems)}
       </Row>
     </Container>
   );

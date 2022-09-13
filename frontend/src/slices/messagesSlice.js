@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { removeChannel } from './channelsSlice';
 
 // Начальное значение
 const initialState = {
@@ -24,6 +25,13 @@ const messagesSlice = createSlice({
     addMessage: (state, action) => {
       state.messages.push(action.payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(removeChannel, (state, action) => {
+      const channelId = action.payload;
+      const restEntities = state.messages.filter((item) => item.channelId !== channelId);
+      state = restEntities;
+    });
   },
 });
 

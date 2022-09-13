@@ -1,15 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
-import * as yup from 'yup';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import {
+  Button, Form, Card, Container, Row, Col
+} from 'react-bootstrap';
 import axios from 'axios';
 import useAuth from '../hooks/index.jsx';
+import useToast from '../hooks/toastHook.jsx';
 import routes from '../routes';
+import enterPic from '../imgs/enter_pic.png';
 
 function LoginPage() {
-  const auth = useAuth();
+  const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
+  const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
+  const toast = useToast();
+  const auth = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,13 +24,6 @@ function LoginPage() {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-
-  // const signupSchema = yup.object().shape({
-  //   name: yup.string()
-  //     .required('Required'),
-  //   password: yup.string()
-  //     .required('Required'),
-  // });
 
   const formik = useFormik({
     initialValues: {
@@ -37,60 +37,90 @@ function LoginPage() {
         const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         auth.logIn();
+        setErr('');
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
-      } catch (err) {
-        if (err.isAxiosError && err.response.status === 401) {
+      } catch (error) {
+        if (error.code === 'ERR_NETWORK') {
+          toast.notify(t('network error'));
+        }
+        if (error.isAxiosError && error.response.status === 401) {
           setAuthFailed(true);
           inputRef.current.select();
+          setErr(error.message);
           return;
         }
-        throw err;
+        throw error;
       }
     },
   });
 
   return (
-    <div className="container-fluid">
-      <div className="row justify-content-center pt-5">
-        <div className="col-sm-4">
-          <Form onSubmit={formik.handleSubmit} className="p-3">
-            <Form.Group>
-              <Form.Label htmlFor="username">Username</Form.Label>
-              <Form.Control
-                onChange={formik.handleChange}
-                value={formik.values.username}
-                placeholder="username"
-                name="username"
-                id="username"
-                autoComplete="username"
-                isInvalid={authFailed}
-                required
-                ref={inputRef}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label htmlFor="password">Password</Form.Label>
-              <Form.Control
-                type="password"
-                onChange={formik.handleChange}
-                value={formik.values.password}
-                placeholder="password"
-                name="password"
-                id="password"
-                autoComplete="current-password"
-                isInvalid={authFailed}
-                required
-              />
-              <Form.Control.Feedback type="invalid">
-                the username or password is incorrect
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Button type="submit" variant="outline-primary">Submit</Button>
-          </Form>
-        </div>
-      </div>
-    </div>
+    <Container className="h-100" fluid>
+      <Row className="justify-content-center align-content-center h-100">
+        <Col xs md="8" xxl="6">
+          <Card className="shadow-sm">
+            <Card.Body>
+              <Row className="p-5">
+
+                <Col md={6} className="d-flex align-items-center justify-content-center">
+                  <img src={enterPic} alt={t('chatLogin')} />
+                </Col>
+
+                <Col>
+                  <Card.Title className="text-center mb-5">
+                    <h1>{t('login')}</h1>
+                  </Card.Title>
+                  <Form onSubmit={formik.handleSubmit} className="form-floating">
+                    <Form.Group controlId="username" className="form-floating mb-3">
+                      <Form.Control
+                        onChange={formik.handleChange}
+                        value={formik.values.username}
+                        placeholder={t('nickname')}
+                        name="username"
+                        id="username"
+                        autoComplete="username"
+                        isInvalid={authFailed}
+                        required
+                        ref={inputRef}
+                      />
+                      <Form.Label>{t('nickname')}</Form.Label>
+                    </Form.Group>
+                    <Form.Group controlId="username" className="form-floating mb-4">
+                      <Form.Control
+                        type="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password}
+                        placeholder={t('pass')}
+                        name="password"
+                        id="password"
+                        autoComplete="current-password"
+                        isInvalid={authFailed}
+                        required
+                      />
+                      <Form.Label>{t('pass')}</Form.Label>
+                      <Form.Control.Feedback type="invalid">
+                        {err ? t(err) : null}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Button type="submit" variant="outline-primary">{t('login')}</Button>
+                  </Form>
+                </Col>
+              </Row>
+            </Card.Body>
+            <Card.Footer className="p-4">
+              <div className="text-center">
+                <span>
+                  {t('have not account')}
+                  {' '}
+                </span>
+                <Link to="/signup">{t('registration')}</Link>
+              </div>
+            </Card.Footer>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

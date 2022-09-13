@@ -27,12 +27,25 @@ const channelsSlice = createSlice({
       };
       state.channels.push(newChannel);
     },
+    removeChannel: (state, action) => {
+      const updatedState = state.channels.filter((channel) => channel.id !== action.payload);
+      state.channels = updatedState;
+    },
+    renameChannel: (state, action) => {
+      state.channels.forEach((channel) => {
+        if (channel.id === action.payload.id) {
+          channel.name = action.payload.name;
+        }
+      });
+    }
   },
 });
 
 // Слайс генерирует действия, которые экспортируются отдельно
 // Действия генерируются автоматически из имен ключей редьюсеров
-export const { addChannel, loadChannels } = channelsSlice.actions;
+export const {
+  addChannel, loadChannels, removeChannel, renameChannel
+} = channelsSlice.actions;
 
 // По умолчанию экспортируется редьюсер сгенерированный слайсом
 export default channelsSlice.reducer;
