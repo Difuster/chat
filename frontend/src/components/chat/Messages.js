@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import filter from 'leo-profanity';
 import sendMessageIcon from '../../imgs/send_message.png';
 
 const renderMessages = (msgs) => msgs.map((m) => {
@@ -54,7 +55,7 @@ function Messages(props) {
                 aria-label={t('ariaLabel')}
                 placeholder={t('placeholder')}
                 className="me-2"
-                value={formik.values.message}
+                value={filter.clean(formik.values.message)}
                 onChange={formik.handleChange}/>
               <Button variant="success" type="submit" disabled="">
                 <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} /></span>

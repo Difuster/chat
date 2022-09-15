@@ -83,7 +83,6 @@ function MainPage() {
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
-      console.log(data);
       dispatch(addMessage(data));
     });
   }, []);
