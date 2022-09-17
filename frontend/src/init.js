@@ -15,7 +15,7 @@ export default async () => {
       resources,
       lng: 'ru',
     });
-  
+
   const rollbarConfig = {
     accessToken: '55b0aef0252044e2876f048d158633f0',
     captureUncaught: true,
