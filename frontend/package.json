@@ -22,6 +22,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",
+    "rollbar": "^2.25.2",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "uniqid": "^5.4.0",
