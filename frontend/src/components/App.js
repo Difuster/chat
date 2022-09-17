@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import filter from 'leo-profanity';
-
 import Header from './Header';
 import MainPage from './chat/MainPage';
 import LoginPage from './LoginPage';
@@ -13,7 +11,6 @@ import AuthContext from '../contexts/index.jsx';
 import ToastContext from '../contexts/toastContext.jsx';
 
 function App() {
-  filter.loadDictionary('ru');
   const [loggedIn, setLoggedIn] = useState(false);
 
   const logIn = () => setLoggedIn(true);

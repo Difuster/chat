@@ -5,6 +5,7 @@ import { Container, Row } from 'react-bootstrap';
 
 import { io } from 'socket.io-client';
 import axios from 'axios';
+import filter from 'leo-profanity';
 
 import Channels from './Channels';
 import Messages from './Messages';
@@ -79,6 +80,7 @@ function MainPage() {
     };
 
     fetchContent();
+    filter.loadDictionary('ru');
   }, []);
 
   useEffect(() => {

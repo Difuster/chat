@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useFormik } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
   Button, Form, Card, Container, Row, Col
 } from 'react-bootstrap';
+import { useFormik } from 'formik';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import useAuth from '../hooks/index.jsx';
 import useToast from '../hooks/toastHook.jsx';
 import routes from '../routes';
@@ -14,12 +14,12 @@ import enterPic from '../imgs/enter_pic.png';
 function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
-  const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
   const toast = useToast();
   const auth = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
 
   useEffect(() => {
     inputRef.current.focus();

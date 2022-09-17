@@ -1,25 +1,25 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import {
   Button, Form, Card, Container, Row, Col
 } from 'react-bootstrap';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import useAuth from '../hooks/index.jsx';
 import useToast from '../hooks/toastHook.jsx';
 import routes from '../routes';
 import signUpPic from '../imgs/sign_up_pic.png';
 
 function SignUpPage() {
-  const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
-  const toast = useToast();
-  const auth = useAuth();
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
+  const toast = useToast();
+  const auth = useAuth();
   const inputRef = useRef();
   const navigate = useNavigate();
+  const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
 
   useEffect(() => {
     inputRef.current.focus();
