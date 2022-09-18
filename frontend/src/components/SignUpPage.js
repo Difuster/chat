@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/index.jsx';
+import useAuth from '../hooks/authHook.jsx';
 import useToast from '../hooks/toastHook.jsx';
 import routes from '../routes';
 import signUpPic from '../imgs/sign_up_pic.png';

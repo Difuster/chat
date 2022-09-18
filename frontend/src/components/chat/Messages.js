@@ -1,22 +1,40 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Col, Form, Button } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
+import { io } from 'socket.io-client';
 import filter from 'leo-profanity';
 import sendMessageIcon from '../../imgs/send_message.png';
-
-const renderMessages = (msgs) => msgs.map((m) => {
-  return (
-    <div key={m.id}>
-      <span>
-        {m.user}: {m.value}
-      </span>
-      <br />
-    </div>
-  );
-});
+import useSocket from '../../hooks/socketHook.jsx';
+import { addMessage } from '../../slices/messagesSlice.js';
 
 function Messages(props) {
+  const renderMessages = (msgs) => msgs.map((m) => {
+    return (
+      <div key={m.id}>
+        <span>
+          {m.user}: {m.value}
+        </span>
+        <br />
+      </div>
+    );
+  });
+
+  const scrollToBottom = (el) => {
+    const height = el.current.scrollHeight;
+    el.current.scroll(0, height);
+  };
+
+  const messages = useSelector((state) => state.messages.messages);
+  const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
+  const currentChannelMessages = getCurrentChannelMessages(messages, props.currentChannelId);
+
+  const dispatch = useDispatch();
+  const { sendMessage } = useSocket();
+  const messagesBox = useRef(null);
+  const socket = io();
+
   const { t } = useTranslation('translation', { keyPrefix: 'messages' });
   const formik = useFormik({
     initialValues: {
@@ -28,10 +46,21 @@ function Messages(props) {
         user: props.getUserName(),
         channelId: props.currentChannelId,
       };
-      props.handleSendMessage(messageData);
+      sendMessage(messageData);
       values.message = '';
     },
   });
+
+  useEffect(() => {
+    scrollToBottom(messagesBox);
+    console.log('scrollToBottom');
+  }, [messages]);
+
+  useEffect(() => {
+    socket.on('newMessage', (data) => {
+      dispatch(addMessage(data));
+    });
+  }, [sendMessage]);
 
   return (
     <Col className="p-0 h-100">
@@ -41,11 +70,11 @@ function Messages(props) {
             <b>{props.currentChannelName}</b>
           </p>
           <span className="text-muted">
-            {t('messageCounter.count', { count: props.currentChannelMessages.length })}
+            {t('messageCounter.count', { count: currentChannelMessages.length })}
           </span>
         </div>
-        <div id="messages-box" className="chat-messages overflow-auto px-5">
-          {renderMessages(props.currentChannelMessages)}
+        <div id="messages-box" className="chat-messages overflow-auto px-5" ref={messagesBox}>
+          {renderMessages(currentChannelMessages)}
         </div>
         <div className="mt-auto px-5 py-3">
           <Form onSubmit={formik.handleSubmit}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import i18n from 'i18next';
+import filter from 'leo-profanity';
 import { initReactI18next, I18nextProvider } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -15,6 +16,8 @@ export default async () => {
       resources,
       lng: 'ru',
     });
+
+  filter.loadDictionary('ru');
 
   const rollbarConfig = {
     accessToken: '55b0aef0252044e2876f048d158633f0',

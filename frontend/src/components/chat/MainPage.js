@@ -5,7 +5,6 @@ import { Container, Row } from 'react-bootstrap';
 
 import { io } from 'socket.io-client';
 import axios from 'axios';
-import filter from 'leo-profanity';
 
 import Channels from './Channels';
 import Messages from './Messages';
@@ -15,7 +14,7 @@ import { loadMessages, addMessage } from '../../slices/messagesSlice.js';
 import AddChannelModal from '../../modal/addChannel';
 import RenameChannelModal from '../../modal/renameChannel';
 import RemoveChannelModal from '../../modal/removeChannel';
-import AuthContext from '../../contexts/index.jsx';
+import useAuth from '../../hooks/authHook.jsx';
 import routes from '../../routes';
 
 const getAuthHeader = () => {
@@ -51,43 +50,20 @@ const renderModal = (modal, hideModal, items) => {
 
 function MainPage() {
   const dispatch = useDispatch();
-  const socket = io();
 
-  const { loggedIn } = useContext(AuthContext);
+  const { loggedIn } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
 
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelName = useSelector((state) => state.currentChannelId.name);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
-  const messages = useSelector((state) => state.messages.messages);
 
   const getUserName = () => {
     const userId = localStorage.getItem('userId');
     const name = JSON.parse(userId).username;
     return name;
   };
-
-  const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
-  const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
-
-  useEffect(() => {
-    const fetchContent = async () => {
-      const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-      dispatch(loadChannels(data.channels));
-      dispatch(getCurrentId(data.currentChannelId));
-      dispatch(loadMessages(data.messages));
-    };
-
-    fetchContent();
-    filter.loadDictionary('ru');
-  }, []);
-
-  useEffect(() => {
-    socket.on('newMessage', (data) => {
-      dispatch(addMessage(data));
-    });
-  }, []);
 
   const closeModal = () => {
     setModalType(null);
@@ -100,10 +76,6 @@ function MainPage() {
     setModalItems({ channelsNames });
   };
 
-  const handleSendMessage = (msg) => {
-    socket.emit('newMessage', msg);
-  };
-
   const handleRemoveChannel = (id) => {
     setModalType('removeChannel');
     setModalItems({ id });
@@ -114,6 +86,22 @@ function MainPage() {
     const channelsNames = channels.map((channel) => channel.name);
     setModalItems({ id, name, channelsNames });
   };
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (loggedIn) {
+        const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
+        dispatch(loadChannels(data.channels));
+        dispatch(getCurrentId(data.currentChannelId));
+        dispatch(loadMessages(data.messages));
+        console.log('fetch');
+      } else {
+        console.log(loggedIn);
+      }
+    };
+
+    fetchContent();
+  }, [loggedIn]);
 
   if (!loggedIn) {
     return <Navigate to='login' />;
@@ -134,9 +122,7 @@ function MainPage() {
         <Messages
           currentChannelName={currentChannelName}
           currentChannelId={currentChannelId}
-          currentChannelMessages={currentChannelMessages}
           getUserName={getUserName}
-          handleSendMessage={handleSendMessage}
         />
 
         {renderModal(modalType, closeModal, modalItems)}

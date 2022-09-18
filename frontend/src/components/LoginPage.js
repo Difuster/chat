@@ -6,7 +6,7 @@ import {
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/index.jsx';
+import useAuth from '../hooks/authHook.jsx';
 import useToast from '../hooks/toastHook.jsx';
 import routes from '../routes';
 import enterPic from '../imgs/enter_pic.png';
