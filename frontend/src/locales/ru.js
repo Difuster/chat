@@ -2,7 +2,7 @@ export default {
   translation: {
     header: {
       logo: 'Hexlet Chat',
-      logout: 'Выход'
+      logout: 'Выйти'
     },
     channels: {
       'channel management': 'Управление каналом',

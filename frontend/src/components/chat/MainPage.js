@@ -53,10 +53,9 @@ function MainPage() {
   const { loggedIn } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
-  console.log(useSelector((state) => state));
   const channels = useSelector((state) => state.channels.channels);
-  const currentChannelName = useSelector((state) => state.currentChannelId.name);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
+  const currentChannelName = channels.filter((ch) => ch.id === currentChannelId).map((ch) => ch.name)[0];
 
   const getUserName = () => {
     const userId = localStorage.getItem('userId');

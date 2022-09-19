@@ -19,7 +19,7 @@ function Header() {
           </Link>
         </Navbar.Brand>
         {auth.loggedIn
-          ? <Button variant="danger" onClick={() => auth.logOut()}>{t('logout')}</Button>
+          ? <Button variant="primary" onClick={() => auth.logOut()}>{t('logout')}</Button>
           : null}
       </Container>
     </Navbar>

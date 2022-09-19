@@ -14,7 +14,7 @@ function Messages(props) {
     return (
       <div key={m.id}>
         <span>
-          {m.user}: {m.value}
+          <b>{m.user}</b>: {m.value}
         </span>
         <br />
       </div>
@@ -66,7 +66,7 @@ function Messages(props) {
       <div className="d-flex flex-column h-100">
         <div className="mb-4 p-3 shadow-sm">
           <p className="m-0">
-            <b>{props.currentChannelName}</b>
+            <b>#{' '}{props.currentChannelName}</b>
           </p>
           <span className="text-muted">
             {t('messageCounter.count', { count: currentChannelMessages.length })}
