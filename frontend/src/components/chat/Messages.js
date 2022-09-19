@@ -53,7 +53,6 @@ function Messages(props) {
 
   useEffect(() => {
     scrollToBottom(messagesBox);
-    console.log('scrollToBottom');
   }, [messages]);
 
   useEffect(() => {

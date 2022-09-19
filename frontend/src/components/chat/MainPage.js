@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row } from 'react-bootstrap';
 
-import { io } from 'socket.io-client';
 import axios from 'axios';
 
 import Channels from './Channels';
 import Messages from './Messages';
 import { loadChannels } from '../../slices/channelsSlice.js';
-import { getCurrentId } from '../../slices/currentChannelIdSlice.js';
-import { loadMessages, addMessage } from '../../slices/messagesSlice.js';
+import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
+import { loadMessages } from '../../slices/messagesSlice.js';
 import AddChannelModal from '../../modal/addChannel';
 import RenameChannelModal from '../../modal/renameChannel';
 import RemoveChannelModal from '../../modal/removeChannel';
@@ -54,7 +53,7 @@ function MainPage() {
   const { loggedIn } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
-
+  console.log(useSelector((state) => state));
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelName = useSelector((state) => state.currentChannelId.name);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
@@ -92,9 +91,8 @@ function MainPage() {
       if (loggedIn) {
         const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
         dispatch(loadChannels(data.channels));
-        dispatch(getCurrentId(data.currentChannelId));
+        dispatch(getCurrentChannelId(data.currentChannelId));
         dispatch(loadMessages(data.messages));
-        console.log('fetch');
       } else {
         console.log(loggedIn);
       }

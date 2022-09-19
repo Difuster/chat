@@ -32,6 +32,7 @@ const channelsSlice = createSlice({
       state.channels = updatedState;
     },
     renameChannel: (state, action) => {
+      console.log(action.payload);
       state.channels.forEach((channel) => {
         if (channel.id === action.payload.id) {
           channel.name = action.payload.name;

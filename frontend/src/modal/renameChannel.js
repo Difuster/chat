@@ -1,17 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
-import { renameChannel } from '../slices/channelsSlice.js';
+import useSocket from '../hooks/socketHook.jsx';
 
 const RenameChannelModal = (props) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.renameChannel' });
   const [err, setErr] = useState(false);
-  const dispatch = useDispatch();
+  const { renameChannel } = useSocket();
 
   const validateChannelName = (newChannel, channels) => {
     yup.setLocale({
@@ -37,7 +36,7 @@ const RenameChannelModal = (props) => {
       const name = values.channel;
       validateChannelName(name, props.items.channelsNames)
         .then((channelName) => {
-          dispatch(renameChannel({ name: channelName, id }));
+          renameChannel(id, channelName);
           values.channel = '';
           props.onHide();
           toast.notify(t('channel is renamed'));

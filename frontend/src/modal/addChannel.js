@@ -1,21 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
-import uniqid from 'uniqid';
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
 import {
   Modal, Form, Button
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
-import { addChannel } from '../slices/channelsSlice.js';
-import { getCurrentId } from '../slices/currentChannelIdSlice.js';
+import useSocket from '../hooks/socketHook.jsx';
 
 const AddChannelModal = (props) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.addChannel' });
   const [err, setErr] = useState(false);
-  const dispatch = useDispatch();
+  const { getNewChannel } = useSocket();
 
   const validateChannelName = (newChannel, channels) => {
     yup.setLocale({
@@ -37,12 +34,10 @@ const AddChannelModal = (props) => {
       channel: '',
     },
     onSubmit: (values) => {
-      const id = uniqid();
       const name = values.channel;
       validateChannelName(name, props.items.channelsNames)
         .then((channelName) => {
-          dispatch(addChannel({ name: channelName, id }));
-          dispatch(getCurrentId(id));
+          getNewChannel(channelName);
           values.channel = '';
           props.onHide();
           toast.notify(t('channel is added'));

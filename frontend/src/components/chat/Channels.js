@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { io } from 'socket.io-client';
 import cn from 'classnames';
-import { getCurrentId } from '../../slices/currentChannelIdSlice.js';
+import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
+import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import addChannelIcon from '../../imgs/add_channel.png';
 
 function Channels(props) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
+  const socket = io();
 
   const DropDownMenu = ({ id, variant, name }) => {
     return (
@@ -31,7 +34,7 @@ function Channels(props) {
     return (
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
-          <Button className={classNames} onClick={() => dispatch(getCurrentId(channel.id))} variant={variant}>
+          <Button className={classNames} onClick={() => dispatch(getCurrentChannelId(channel.id))} variant={variant}>
             <span className="me-1">
             #
             {' '}
@@ -51,6 +54,22 @@ function Channels(props) {
       </li>
     );
   });
+
+  useEffect(() => {
+    socket.on('newChannel', (data) => {
+      dispatch(addChannel({ name: data.channel, id: data.id, removable: data.removable }));
+      dispatch(getCurrentChannelId(data.id));
+    });
+
+    socket.on('removeChannel', (data) => {
+      dispatch(removeChannel(data.id));
+      dispatch(getCurrentChannelId(1));
+    });
+
+    socket.on('renameChannel', (data) => {
+      dispatch(renameChannel(data));
+    });
+  }, [dispatch]);
 
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">

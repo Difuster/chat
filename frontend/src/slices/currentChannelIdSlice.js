@@ -8,11 +8,11 @@ const currentChannelIdSlice = createSlice({
   name: 'currentChannelId',
   initialState,
   reducers: {
-    getCurrentId: (state, action) => {
+    getCurrentChannelId: (state, action) => {
       state.id = action.payload;
     },
   }
 });
 
-export const { getCurrentId } = currentChannelIdSlice.actions;
+export const { getCurrentChannelId } = currentChannelIdSlice.actions;
 export default currentChannelIdSlice.reducer;

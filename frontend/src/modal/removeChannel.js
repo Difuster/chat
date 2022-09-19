@@ -1,15 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { removeChannel } from '../slices/channelsSlice.js';
-import { getCurrentId } from '../slices/currentChannelIdSlice.js';
 import useToast from '../hooks/toastHook.jsx';
+import useSocket from '../hooks/socketHook.jsx';
 
 const RemoveChannelModal = (props) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.removeChannel' });
-  const dispatch = useDispatch();
+  const { removeChannel } = useSocket();
 
   return (
     <Modal show>
@@ -22,8 +20,7 @@ const RemoveChannelModal = (props) => {
         <div className="d-flex justify-content-end">
           <Button className="me-2" type="button" variant="secondary" onClick={() => props.onHide()}>{t('cancel')}</Button>
           <Button type="button" variant="danger" onClick={() => {
-            dispatch(removeChannel(props.items.id));
-            dispatch(getCurrentId(1));
+            removeChannel(props.items.id);
             props.onHide();
             toast.notify(t('channel is removed'));
           }

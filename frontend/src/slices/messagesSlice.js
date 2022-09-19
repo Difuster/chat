@@ -30,7 +30,7 @@ const messagesSlice = createSlice({
     builder.addCase(removeChannel, (state, action) => {
       const channelId = action.payload;
       const restEntities = state.messages.filter((item) => item.channelId !== channelId);
-      state = restEntities;
+      state.messages = restEntities;
     });
   },
 });
