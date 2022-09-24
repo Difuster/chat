@@ -4,24 +4,24 @@ import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
 import useSocket from '../hooks/socketHook.jsx';
 
-const RemoveChannelModal = (props) => {
+const RemoveChannelModal = ({ items, onHide }) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.removeChannel' });
   const { removeChannel } = useSocket();
 
   return (
     <Modal show>
-      <Modal.Header closeButton onHide={props.onHide}>
+      <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>{t('remove channel')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p className="lead">{t('sure')}</p>
         <div className="d-flex justify-content-end">
-          <Button className="me-2" type="button" variant="secondary" onClick={() => props.onHide()}>{t('cancel')}</Button>
+          <Button className="me-2" type="button" variant="secondary" onClick={() => onHide()}>{t('cancel')}</Button>
           <Button type="button" variant="danger" onClick={() => {
-            removeChannel(props.items.id);
-            props.onHide();
+            removeChannel(items.id);
+            onHide();
             toast.notify(t('channel is removed'));
           }
           }>

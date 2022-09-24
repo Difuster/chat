@@ -79,7 +79,7 @@ function LoginPage() {
                         placeholder={t('nickname')}
                         name="username"
                         id="username"
-                        autoComplete="username"
+                        autoComplete="off"
                         isInvalid={authFailed}
                         required
                         ref={inputRef}
@@ -94,7 +94,7 @@ function LoginPage() {
                         placeholder={t('pass')}
                         name="password"
                         id="password"
-                        autoComplete="current-password"
+                        autoComplete="off"
                         isInvalid={authFailed}
                         required
                       />

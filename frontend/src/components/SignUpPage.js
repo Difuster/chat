@@ -13,8 +13,7 @@ import routes from '../routes';
 import signUpPic from '../imgs/sign_up_pic.png';
 
 function SignUpPage() {
-  const [err, setErr] = useState('');
-  const [authFailed, setAuthFailed] = useState(false);
+  const [regFailed, setRegFailed] = useState(false);
   const toast = useToast();
   const auth = useAuth();
   const inputRef = useRef();
@@ -25,26 +24,17 @@ function SignUpPage() {
     inputRef.current.focus();
   }, []);
 
-  const validateForm = (data) => {
-    yup.setLocale({
-      mixed: {
-        oneOf: t('errors.oneOf')
-      },
-      string: {
-        required: t('errors.required'),
-        min: t('errors.min name characters'),
-        max: t('errors.max'),
-      }
-    });
-
-    const schema = yup.object({
-      username: yup.string().required().min(3).max(20),
-      password: yup.string().required().min(6, t('errors.min pass characters')),
-      passConfirmation: yup.string().oneOf([yup.ref('password')]),
-    });
-
-    return schema.validate(data);
-  };
+  const schema = yup.object({
+    username: yup.string()
+      .required(t('errors.required field'))
+      .min(3, t('errors.username must be at least 3 characters'))
+      .max(20, t('errors.username must be max 20 characters')),
+    password: yup.string()
+      .required(t('errors.required field'))
+      .min(6, t('errors.min pass characters')),
+    passConfirmation: yup.string()
+      .oneOf([yup.ref('password')], t('errors.oneOf')),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -52,34 +42,26 @@ function SignUpPage() {
       password: '',
       passConfirmation: '',
     },
-    onSubmit: (values) => {
-      validateForm(values)
-        .then(async (regData) => {
-          setAuthFailed(false);
-          try {
-            const res = await axios.post(routes.signUpPath(), regData);
-            localStorage.setItem('userId', JSON.stringify(res.data));
-            setErr('');
-            auth.logIn();
-            navigate('/');
-          } catch (error) {
-            if (error.code === 'ERR_NETWORK') {
-              toast.notify(t('network error'));
-            }
-            if (error.isAxiosError && error.response.status === 409) {
-              setAuthFailed(true);
-              inputRef.current.select();
-              return;
-            }
-            setErr(error.message);
-            throw error;
-          }
-        })
-        .catch((error) => {
-          setAuthFailed(true);
-          setErr(error.message);
-        });
-    },
+    validationSchema: schema,
+    onSubmit: async (values) => {
+      try {
+        const res = await axios.post(routes.signUpPath(), values);
+        localStorage.setItem('userId', JSON.stringify(res.data));
+        setRegFailed(false);
+        auth.logIn();
+        navigate('/');
+      } catch (error) {
+        if (error.code === 'ERR_NETWORK') {
+          toast.notify(t('errors.network error'));
+        }
+        if (error.isAxiosError && error.response.status === 409) {
+          setRegFailed(true);
+          inputRef.current.select();
+          return;
+        }
+        throw error;
+      }
+    }
   });
 
   return (
@@ -99,21 +81,36 @@ function SignUpPage() {
                     <h1>{t('registration')}</h1>
                   </Card.Title>
                   <Form onSubmit={formik.handleSubmit} className="form-floating">
+                  {
+                    regFailed
+                      ? <Alert variant="danger">{t('errors.user is exists')}</Alert>
+                      : null
+                  }
                     <Form.Group controlId="username" className="form-floating mb-3">
                       <Form.Control
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         value={formik.values.username}
                         placeholder={t('name')}
                         name="username"
                         id="username"
-                        autoComplete="username"
-                        isInvalid={authFailed}
+                        autoComplete="off"
+                        isInvalid={regFailed}
                         required
                         ref={inputRef}
                       />
                       <Form.Label>{t('name')}</Form.Label>
+                      {
+                        formik.errors.username && formik.touched.username
+                          ? <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}>
+                          {formik.errors.username}
+                          </Form.Control.Feedback>
+                          : null
+                      }
                     </Form.Group>
-                    <Form.Group controlId="username" className="form-floating mb-4">
+                    <Form.Group controlId="password" className="form-floating mb-4">
                       <Form.Control
                         type="password"
                         onChange={formik.handleChange}
@@ -121,13 +118,22 @@ function SignUpPage() {
                         placeholder={t('pass')}
                         name="password"
                         id="password"
-                        autoComplete="current-password"
-                        isInvalid={authFailed}
+                        autoComplete="off"
+                        isInvalid={regFailed}
                         required
                       />
                       <Form.Label>{t('pass')}</Form.Label>
+                      {
+                        formik.errors.password && formik.touched.password
+                          ? <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}>
+                          {formik.errors.password}
+                          </Form.Control.Feedback>
+                          : null
+                      }
                     </Form.Group>
-                    <Form.Group controlId="username" className="form-floating mb-4">
+                    <Form.Group controlId="passConfirmation" className="form-floating mb-4">
                       <Form.Control
                         type="password"
                         onChange={formik.handleChange}
@@ -135,17 +141,21 @@ function SignUpPage() {
                         placeholder={t('confirm pass')}
                         name="passConfirmation"
                         id="passConfirmation"
-                        autoComplete="current-password"
-                        isInvalid={authFailed}
+                        autoComplete="off"
+                        isInvalid={regFailed}
                         required
                       />
                       <Form.Label>{t('confirm pass')}</Form.Label>
+                      {
+                        formik.errors.passConfirmation && formik.touched.passConfirmation
+                          ? <Form.Control.Feedback
+                          type="invalid"
+                          style={{ display: 'block' }}>
+                          {formik.errors.passConfirmation}
+                          </Form.Control.Feedback>
+                          : null
+                      }
                     </Form.Group>
-                    {
-                      err
-                        ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{err}</Form.Control.Feedback>
-                        : <br />
-                    }
                     <Button type="submit" variant="outline-primary">{t('register')}</Button>
                   </Form>
                 </Col>

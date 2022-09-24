@@ -20,6 +20,7 @@ function App() {
   const logOut = () => {
     localStorage.removeItem('userId');
     setLoggedIn(false);
+    socket.close();
   };
 
   const sendMessage = (message) => {
@@ -49,6 +50,7 @@ function App() {
       <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
         <ToastContext.Provider value={{ notify }}>
           <SocketContext.Provider value={{
+            socket,
             sendMessage,
             getNewChannel,
             removeChannel,

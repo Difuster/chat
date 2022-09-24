@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
 import useSocket from '../hooks/socketHook.jsx';
 
-const AddChannelModal = (props) => {
+const AddChannelModal = ({ items, onHide }) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.addChannel' });
   const [err, setErr] = useState(false);
@@ -35,11 +35,11 @@ const AddChannelModal = (props) => {
     },
     onSubmit: (values) => {
       const name = values.channel;
-      validateChannelName(name, props.items.channelsNames)
+      validateChannelName(name, items.channelsNames)
         .then((channelName) => {
           getNewChannel(channelName);
           values.channel = '';
-          props.onHide();
+          onHide();
           toast.notify(t('channel is added'));
           setErr(false);
         })
@@ -57,7 +57,7 @@ const AddChannelModal = (props) => {
 
   return (
     <Modal show>
-      <Modal.Header closeButton onHide={props.onHide}>
+      <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>{t('add channel')}</Modal.Title>
       </Modal.Header>
 
@@ -66,6 +66,7 @@ const AddChannelModal = (props) => {
           <Form.Group>
             <Form.Control
               ref={inputRef}
+              autoComplete="off"
               required
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -80,7 +81,7 @@ const AddChannelModal = (props) => {
                 : <br />
             }
             <div className="d-flex justify-content-end">
-              <Button className="me-2" type="button" variant="secondary" onClick={props.onHide}>{t('cancel')}</Button>
+              <Button className="me-2" type="button" variant="secondary" onClick={onHide}>{t('cancel')}</Button>
               <Button type="submit" variant="primary">{t('add')}</Button>
             </div>
           </Form.Group>

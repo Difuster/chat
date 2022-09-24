@@ -26,25 +26,17 @@ const getAuthHeader = () => {
   return {};
 };
 
-const renderModal = (modal, hideModal, items) => {
-  let modalToRender;
-  if (!modal) {
-    modalToRender = null;
+const renderModal = (type, items, toClose) => {
+  switch (type) {
+    case 'addChannel':
+      return <AddChannelModal onHide={toClose} items={items}/>;
+    case 'renameChannel':
+      return <RenameChannelModal onHide={toClose} items={items}/>;
+    case 'removeChannel':
+      return <RemoveChannelModal onHide={toClose} items={items}/>;
+    default:
+      return null;
   }
-
-  if (modal === 'addChannel') {
-    modalToRender = <AddChannelModal onHide={hideModal} items={items}/>;
-  }
-
-  if (modal === 'renameChannel') {
-    modalToRender = <RenameChannelModal onHide={hideModal} items={items}/>;
-  }
-
-  if (modal === 'removeChannel') {
-    modalToRender = <RemoveChannelModal onHide={hideModal} items={items}/>;
-  }
-
-  return modalToRender;
 };
 
 function MainPage() {
@@ -63,26 +55,25 @@ function MainPage() {
     return name;
   };
 
-  const closeModal = () => {
-    setModalType(null);
-  };
-
-  const showModal = (e) => {
-    e.preventDefault();
+  const openModalAddChannel = () => {
     setModalType('addChannel');
     const channelsNames = channels.map((channel) => channel.name);
     setModalItems({ channelsNames });
   };
 
-  const handleRemoveChannel = (id) => {
+  const openModalRemoveChannel = (id) => {
     setModalType('removeChannel');
     setModalItems({ id });
   };
 
-  const handleRenameChannel = (id, name) => {
+  const openModalRenameChannel = (id, name) => {
     setModalType('renameChannel');
     const channelsNames = channels.map((channel) => channel.name);
     setModalItems({ id, name, channelsNames });
+  };
+
+  const closeModal = () => {
+    setModalType(null);
   };
 
   useEffect(() => {
@@ -111,9 +102,10 @@ function MainPage() {
         <Channels
           channels={channels}
           currentChannelId={currentChannelId}
-          showModal={showModal}
-          handleRemoveChannel={handleRemoveChannel}
-          handleRenameChannel={handleRenameChannel}
+          openModalAddChannel={openModalAddChannel}
+          openModalRenameChannel={openModalRenameChannel}
+          openModalRemoveChannel={openModalRemoveChannel}
+          closeModal={closeModal}
         />
 
         <Messages
@@ -122,7 +114,7 @@ function MainPage() {
           getUserName={getUserName}
         />
 
-        {renderModal(modalType, closeModal, modalItems)}
+        {renderModal(modalType, modalItems, closeModal)}
       </Row>
     </Container>
   );

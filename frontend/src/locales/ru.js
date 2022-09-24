@@ -27,21 +27,24 @@ export default {
       'have not account': 'Нет аккаунта?',
       registration: 'Регистрация',
       'Request failed with status code 401': 'Неверные имя пользователя или пароль',
-      'network error': 'Ошибка подключения'
+      'network error': 'Ошибка соединения'
     },
     signupPage: {
       errors: {
         required: 'Поле не должно быть пустым',
-        'min name characters': 'Имя должно быть не менее 3 символов',
-        'min pass characters': 'Пароль должен быть не менее 6 символов',
-        oneOf: 'Поле должно совпадать с полем: Пароль'
+        'username must be at least 3 characters': 'От 3 до 20 символов',
+        'username must be max 20 characters': 'От 3 до 20 символов',
+        'min pass characters': 'Не менее 6 символов',
+        'required field': 'Обязательное поле',
+        oneOf: 'Пароли должны совпадать',
+        'user is exists': 'Такой пользователь уже существует',
+        'network error': 'Ошибка соединения'
       },
       registration: 'Регистрация',
-      name: 'Имя',
+      name: 'Имя пользователя',
       pass: 'Пароль',
       'confirm pass': 'Подтвердите пароль',
-      register: 'Зарегистрироваться',
-      'network error': 'Ошибка подключения'
+      register: 'Зарегистрироваться'
     },
     notFoundPage: {
       'page not found': 'Страница не найдена',
@@ -65,7 +68,7 @@ export default {
         sure: 'Уверены?',
         cancel: 'Отменить',
         remove: 'Удалить',
-        'channel is removed': 'Канал удален!'
+        'channel is removed': 'Канал удалён!'
       },
       renameChannel: {
         errors: {

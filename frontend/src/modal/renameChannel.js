@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
 import useSocket from '../hooks/socketHook.jsx';
 
-const RenameChannelModal = (props) => {
+const RenameChannelModal = ({ items, onHide }) => {
   const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.renameChannel' });
   const [err, setErr] = useState(false);
@@ -29,16 +29,16 @@ const RenameChannelModal = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      channel: props.items.name,
+      channel: items.name,
     },
     onSubmit: (values) => {
-      const { id } = props.items;
+      const { id } = items;
       const name = values.channel;
-      validateChannelName(name, props.items.channelsNames)
+      validateChannelName(name, items.channelsNames)
         .then((channelName) => {
           renameChannel(id, channelName);
           values.channel = '';
-          props.onHide();
+          onHide();
           toast.notify(t('channel is renamed'));
           setErr(false);
         })
@@ -56,7 +56,7 @@ const RenameChannelModal = (props) => {
 
   return (
     <Modal show>
-      <Modal.Header closeButton onHide={props.onHide}>
+      <Modal.Header closeButton onHide={onHide}>
         <Modal.Title>{t('rename')}</Modal.Title>
       </Modal.Header>
 
@@ -65,6 +65,7 @@ const RenameChannelModal = (props) => {
           <Form.Group>
             <Form.Control
               ref={inputRef}
+              autoComplete="off"
               required
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -78,7 +79,7 @@ const RenameChannelModal = (props) => {
                 : <br />
             }
             <div className="d-flex justify-content-end">
-              <Button className="me-2" type="button" variant="secondary" onClick={() => props.onHide()}>{t('cancel')}</Button>
+              <Button className="me-2" type="button" variant="secondary" onClick={() => onHide()}>{t('cancel')}</Button>
               <Button type="submit" variant="primary">{t('confirm')}</Button>
             </div>
           </Form.Group>

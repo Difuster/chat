@@ -2,31 +2,19 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { io } from 'socket.io-client';
 import cn from 'classnames';
 import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
 import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import addChannelIcon from '../../imgs/add_channel.png';
+import useSocket from '../../hooks/socketHook.jsx';
+import DropDownMenu from './DropDownMenu';
 
-function Channels(props) {
+function Channels({
+  channels, currentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel
+}) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
-  const socket = io();
-
-  const DropDownMenu = ({ id, variant, name }) => {
-    return (
-      <>
-        <Dropdown.Toggle id="dropdown-basic" variant={variant}>
-          <span className="visually-hidden">{t('channels')}</span>
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => props.handleRemoveChannel(id)}>{t('remove')}</Dropdown.Item>
-          <Dropdown.Item onClick={() => props.handleRenameChannel(id, name)}>{t('rename')}</Dropdown.Item>
-        </Dropdown.Menu>
-      </>
-    );
-  };
+  const { socket } = useSocket();
 
   const renderChannels = (chnls, id) => chnls.map((channel) => {
     const variant = id === channel.id ? 'secondary' : 'light';
@@ -45,8 +33,8 @@ function Channels(props) {
               name={channel.name}
               id={channel.id}
               variant={variant}
-              handleRemoveChannel={props.handleRemoveChannel}
-              handleRenameChannel={props.handleRenameChannel}
+              openModalRenameChannel={openModalRenameChannel}
+              openModalRemoveChannel={openModalRemoveChannel}
             />
             : null
           }
@@ -74,12 +62,12 @@ function Channels(props) {
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
     <div className="d-flex justify-content-between mb-2 ps-4 pe-2"><span>{t('channels')}</span>
-      <button onClick={(e) => props.showModal(e)} type="button" className="p-0 text-primary btn btn-group-vertical">
+      <button onClick={() => openModalAddChannel()} type="button" className="p-0 text-primary btn btn-group-vertical">
         <span><img style={{ width: '20px', height: '20px' }} src={addChannelIcon} /></span>
       </button>
     </div>
     <ul className="nav flex-column nav-pills nav-fill px-2">
-      {renderChannels(props.channels, props.currentChannelId)}
+      {renderChannels(channels, currentChannelId)}
     </ul>
     </div>
   );

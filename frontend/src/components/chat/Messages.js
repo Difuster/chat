@@ -3,24 +3,24 @@ import { Col, Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
-import { io } from 'socket.io-client';
 import filter from 'leo-profanity';
 import sendMessageIcon from '../../imgs/send_message.png';
 import useSocket from '../../hooks/socketHook.jsx';
 import { addMessage } from '../../slices/messagesSlice.js';
 
-function Messages(props) {
-  const renderMessages = (msgs) => msgs.map((m) => {
-    return (
-      <div key={m.id}>
-        <span>
-          <b>{m.user}</b>: {m.value}
-        </span>
-        <br />
-      </div>
-    );
-  });
+const renderMessages = (msgs) => msgs.map((m) => {
+  console.log(m.id);
+  return (
+    <div key={m.id}>
+      <span>
+        <b>{m.user}</b>: {m.value}
+      </span>
+      <br />
+    </div>
+  );
+});
 
+function Messages(props) {
   const scrollToBottom = (el) => {
     const height = el.current.scrollHeight;
     el.current.scroll(0, height);
@@ -31,9 +31,8 @@ function Messages(props) {
   const currentChannelMessages = getCurrentChannelMessages(messages, props.currentChannelId);
 
   const dispatch = useDispatch();
-  const { sendMessage } = useSocket();
+  const { socket, sendMessage } = useSocket();
   const messagesBox = useRef(null);
-  const socket = io();
 
   const { t } = useTranslation('translation', { keyPrefix: 'messages' });
   const formik = useFormik({
@@ -57,6 +56,7 @@ function Messages(props) {
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
+      console.log('dispatch: addMessage', data);
       dispatch(addMessage(data));
     });
   }, [sendMessage]);
@@ -80,6 +80,7 @@ function Messages(props) {
             <Form.Group className="d-flex">
               <Form.Control name="message"
                 type="text"
+                autoComplete="off"
                 aria-label={t('ariaLabel')}
                 placeholder={t('placeholder')}
                 className="me-2"
