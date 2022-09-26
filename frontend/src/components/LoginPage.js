@@ -86,7 +86,7 @@ function LoginPage() {
                       />
                       <Form.Label>{t('nickname')}</Form.Label>
                     </Form.Group>
-                    <Form.Group controlId="username" className="form-floating mb-4">
+                    <Form.Group controlId="password" className="form-floating mb-4">
                       <Form.Control
                         type="password"
                         onChange={formik.handleChange}
@@ -99,7 +99,7 @@ function LoginPage() {
                         required
                       />
                       <Form.Label>{t('pass')}</Form.Label>
-                      <Form.Control.Feedback type="invalid">
+                      <Form.Control.Feedback type="invalid" style={{ display: block }}>
                         {err ? t(err) : null}
                       </Form.Control.Feedback>
                     </Form.Group>
