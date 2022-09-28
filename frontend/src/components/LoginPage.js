@@ -99,7 +99,7 @@ function LoginPage() {
                         required
                       />
                       <Form.Label>{t('pass')}</Form.Label>
-                      <Form.Control.Feedback type="invalid" style={{ display: block }}>
+                      <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>
                         {err ? t(err) : null}
                       </Form.Control.Feedback>
                     </Form.Group>
