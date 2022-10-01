@@ -9,8 +9,8 @@ import LoginPage from './LoginPage';
 import SignUpPage from './SignUpPage';
 import NotFoundPage from './NotFoundPage';
 import AuthContext from '../contexts/authContext.jsx';
-import ToastContext from '../contexts/toastContext.jsx';
 import SocketContext from '../contexts/socketContext.jsx';
+import ToastContext from '../contexts/toastContext.jsx';
 
 function App() {
   const socket = io();
