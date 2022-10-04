@@ -75,6 +75,7 @@ const AddChannelModal = ({ items, onHide }) => {
               name="channel"
               id="channel"
             />
+            <Form.Label className="visually-hidden">{t('channel name')}</Form.Label>
             {
               err
                 ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{err}</Form.Control.Feedback>
