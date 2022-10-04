@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import cn from 'classnames';
 import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
 import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
-import addChannelIcon from '../../imgs/add_channel.png';
 import useSocket from '../../hooks/socketHook.jsx';
 import DropDownMenu from './DropDownMenu';
 
@@ -22,7 +21,9 @@ function Channels({
     return (
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
-          <Button className={classNames} onClick={() => dispatch(getCurrentChannelId(channel.id))} variant={variant}>
+          <Button className={classNames}
+          variant={variant}
+          onClick={() => dispatch(getCurrentChannelId(channel.id))}>
             <span className="me-1">
             #
             {' '}
@@ -62,9 +63,12 @@ function Channels({
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
     <div className="d-flex justify-content-between mb-2 ps-4 pe-2"><span>{t('channels')}</span>
-      <button onClick={() => openModalAddChannel()} type="button" className="p-0 text-primary btn btn-group-vertical">
-        <span><img style={{ width: '20px', height: '20px' }} src={addChannelIcon} /></span>
-      </button>
+      <Button onClick={() => openModalAddChannel()}
+      role="button"
+      variant="outline-primary"
+      className="btn-sm px-2 py-0 noFocus">
+        {t('add button')}
+      </Button>
     </div>
     <ul className="nav flex-column nav-pills nav-fill px-2">
       {renderChannels(channels, currentChannelId)}

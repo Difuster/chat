@@ -8,7 +8,8 @@ export default {
       'channel management': 'Управление каналом',
       channels: 'Каналы',
       remove: 'Удалить',
-      rename: 'Переименовать'
+      rename: 'Переименовать',
+      'add button': '+'
     },
     messages: {
       messageCounter: {
