@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import cn from 'classnames';
 import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
 import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import useSocket from '../../hooks/socketHook.jsx';
@@ -17,17 +16,15 @@ function Channels({
 
   const renderChannels = (chnls, id) => chnls.map((channel) => {
     const variant = id === channel.id ? 'secondary' : 'light';
-    const classNames = cn('w-100', 'rounded-0', 'text-start');
     return (
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
-          <Button className={classNames}
+          <Button className='w-100 rounded-0 text-start'
           variant={variant}
           onClick={() => dispatch(getCurrentChannelId(channel.id))}>
-            <span className="me-1">
             #
             {' '}
-            {channel.name}</span>
+            {channel.name}
           </Button>
           {channel.removable
             ? <DropDownMenu
