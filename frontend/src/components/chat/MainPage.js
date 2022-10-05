@@ -29,11 +29,11 @@ const getAuthHeader = () => {
 const renderModal = (type, items, toClose) => {
   switch (type) {
     case 'addChannel':
-      return <AddChannelModal onHide={toClose} items={items}/>;
+      return <AddChannelModal onHide={toClose} items={items} />;
     case 'renameChannel':
-      return <RenameChannelModal onHide={toClose} items={items}/>;
+      return <RenameChannelModal onHide={toClose} items={items} />;
     case 'removeChannel':
-      return <RemoveChannelModal onHide={toClose} items={items}/>;
+      return <RemoveChannelModal onHide={toClose} items={items} />;
     default:
       return null;
   }
@@ -47,7 +47,9 @@ function MainPage() {
   const [modalItems, setModalItems] = useState(null);
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
-  const currentChannelName = channels.filter((ch) => ch.id === currentChannelId).map((ch) => ch.name)[0];
+  const currentChannelName = channels
+    .filter((ch) => ch.id === currentChannelId)
+    .map((ch) => ch.name)[0];
 
   const getUserName = () => {
     const userId = localStorage.getItem('userId');
@@ -89,10 +91,10 @@ function MainPage() {
     };
 
     fetchContent();
-  }, [loggedIn]);
+  }, [loggedIn, dispatch]);
 
   if (!loggedIn) {
-    return <Navigate to='login' />;
+    return <Navigate to="login" />;
   }
 
   return (

@@ -15,12 +15,12 @@ const RenameChannelModal = ({ items, onHide }) => {
   const validateChannelName = (newChannel, channels) => {
     yup.setLocale({
       mixed: {
-        notOneOf: t('errors.notOneOf')
+        notOneOf: t('errors.notOneOf'),
       },
       string: {
         required: t('errors.required'),
-        min: t('errors.min')
-      }
+        min: t('errors.min'),
+      },
     });
 
     const schema = yup.string().required().min(3).notOneOf(channels);
@@ -37,7 +37,7 @@ const RenameChannelModal = ({ items, onHide }) => {
       validateChannelName(name, items.channelsNames)
         .then((channelName) => {
           renameChannel(id, channelName);
-          values.channel = '';
+          formik.values.channel = '';
           onHide();
           toast.notify(t('channel is renamed'));
           setErr(false);

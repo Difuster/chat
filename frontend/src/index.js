@@ -7,7 +7,7 @@ const runApp = () => {
     .then((item) => {
       const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(
-        item
+        item,
       );
     });
   return app;

@@ -39,26 +39,24 @@ function App() {
     socket.emit('renameChannel', { id, name });
   };
 
-  const notify = (text) => {
-    return toast.success(text, {
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  };
+  const notify = (text) => toast.success(text, { position: toast.POSITION.TOP_RIGHT });
 
   return (
     <div className="d-flex flex-column h-100 bg-light">
       <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
         <ToastContext.Provider value={{ notify }}>
-          <SocketContext.Provider value={{
-            socket,
-            sendMessage,
-            getNewChannel,
-            removeChannel,
-            renameChannel
-          }}>
+          <SocketContext.Provider value={
+            {
+              socket,
+              sendMessage,
+              getNewChannel,
+              removeChannel,
+              renameChannel,
+            }
+          }>
             <Header />
             <Routes>
-              <Route path="/" element={<MainPage />}/>
+              <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="*" element={<NotFoundPage />} />

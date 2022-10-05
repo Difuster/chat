@@ -8,7 +8,10 @@ function PageNotFound() {
   return (
     <>
       <h1>{t('page not found')}</h1>
-      <p>{t('link to')} <Link to="/">{t('main page')}</Link></p>
+      <p>
+        {t('link to')}
+        <Link to="/">{t('main page')}</Link>
+      </p>
     </>
   );
 }

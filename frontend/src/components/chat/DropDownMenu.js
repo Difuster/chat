@@ -3,7 +3,7 @@ import { Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const DropDownMenu = ({
-  openModalRenameChannel, openModalRemoveChannel, id, variant, name
+  openModalRenameChannel, openModalRemoveChannel, id, variant, name,
 }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   return (

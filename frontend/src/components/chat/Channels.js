@@ -8,7 +8,7 @@ import useSocket from '../../hooks/socketHook.jsx';
 import DropDownMenu from './DropDownMenu';
 
 function Channels({
-  channels, currentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel
+  channels, currentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel,
 }) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
@@ -19,23 +19,24 @@ function Channels({
     return (
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
-          <Button className='w-100 rounded-0 text-start'
-          variant={variant}
-          onClick={() => dispatch(getCurrentChannelId(channel.id))}>
+          <Button
+            className='w-100 rounded-0 text-start'
+            variant={variant}
+            onClick={() => dispatch(getCurrentChannelId(channel.id))}
+          >
             #
             {' '}
             {channel.name}
           </Button>
           {channel.removable
-            ? <DropDownMenu
-              name={channel.name}
-              id={channel.id}
-              variant={variant}
-              openModalRenameChannel={openModalRenameChannel}
-              openModalRemoveChannel={openModalRemoveChannel}
-            />
-            : null
-          }
+            ? (<DropDownMenu
+                name={channel.name}
+                id={channel.id}
+                variant={variant}
+                openModalRenameChannel={openModalRenameChannel}
+                openModalRemoveChannel={openModalRemoveChannel}
+              />)
+            : null}
         </Dropdown>
       </li>
     );
@@ -55,21 +56,25 @@ function Channels({
     socket.on('renameChannel', (data) => {
       dispatch(renameChannel(data));
     });
-  }, [dispatch]);
+  }, [socket, dispatch]);
 
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
-    <div className="d-flex justify-content-between mb-2 ps-4 pe-2"><span>{t('channels')}</span>
-      <Button onClick={() => openModalAddChannel()}
-      role="button"
-      variant="outline-primary"
-      className="btn-sm px-2 py-0 noFocus">
-        {t('add button')}
-      </Button>
-    </div>
-    <ul className="nav flex-column nav-pills nav-fill px-2">
-      {renderChannels(channels, currentChannelId)}
-    </ul>
+      <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
+        <span>
+          {t('channels')}
+        </span>
+        <Button onClick={() => openModalAddChannel()}
+          role="button"
+          variant="outline-primary"
+          className="btn-sm px-2 py-0 noFocus"
+        >
+          {t('add button')}
+        </Button>
+      </div>
+      <ul className="nav flex-column nav-pills nav-fill px-2">
+        {renderChannels(channels, currentChannelId)}
+      </ul>
     </div>
   );
 }

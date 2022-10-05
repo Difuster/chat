@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import {
-  Modal, Form, Button
+  Modal, Form, Button,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import useToast from '../hooks/toastHook.jsx';
@@ -17,12 +17,12 @@ const AddChannelModal = ({ items, onHide }) => {
   const validateChannelName = (newChannel, channels) => {
     yup.setLocale({
       mixed: {
-        notOneOf: t('errors.notOneOf')
+        notOneOf: t('errors.notOneOf'),
       },
       string: {
         required: t('errors.required'),
-        min: t('errors.min')
-      }
+        min: t('errors.min'),
+      },
     });
 
     const schema = yup.string().required().min(3).notOneOf(channels);
@@ -38,7 +38,7 @@ const AddChannelModal = ({ items, onHide }) => {
       validateChannelName(name, items.channelsNames)
         .then((channelName) => {
           getNewChannel(channelName);
-          values.channel = '';
+          formik.values.channel = '';
           onHide();
           toast.notify(t('channel is added'));
           setErr(false);

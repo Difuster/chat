@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Button, Form, Card, Container, Row, Col
+  Button, Form, Card, Container, Row, Col, Alert,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -61,7 +61,7 @@ function SignUpPage() {
         }
         throw error;
       }
-    }
+    },
   });
 
   return (
@@ -81,11 +81,11 @@ function SignUpPage() {
                     <h1>{t('registration')}</h1>
                   </Card.Title>
                   <Form onSubmit={formik.handleSubmit} className="form-floating">
-                  {
-                    regFailed
-                      ? <Alert variant="danger">{t('errors.user is exists')}</Alert>
-                      : null
-                  }
+                    {
+                      regFailed
+                        ? <Alert variant="danger">{t('errors.user is exists')}</Alert>
+                        : null
+                    }
                     <Form.Group controlId="username" className="form-floating mb-3">
                       <Form.Control
                         onChange={formik.handleChange}
@@ -102,11 +102,13 @@ function SignUpPage() {
                       <Form.Label>{t('name')}</Form.Label>
                       {
                         formik.errors.username && formik.touched.username
-                          ? <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}>
-                          {formik.errors.username}
-                          </Form.Control.Feedback>
+                          ? (<Form.Control.Feedback
+                              type="invalid"
+                              style={
+                                { display: 'block' }
+                              }>
+                              {formik.errors.username}
+                            </Form.Control.Feedback>)
                           : null
                       }
                     </Form.Group>
@@ -125,11 +127,13 @@ function SignUpPage() {
                       <Form.Label>{t('pass')}</Form.Label>
                       {
                         formik.errors.password && formik.touched.password
-                          ? <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}>
-                          {formik.errors.password}
-                          </Form.Control.Feedback>
+                          ? (<Form.Control.Feedback
+                              type="invalid"
+                              style={
+                                { display: 'block' }
+                              }>
+                              {formik.errors.password}
+                            </Form.Control.Feedback>)
                           : null
                       }
                     </Form.Group>
@@ -148,11 +152,13 @@ function SignUpPage() {
                       <Form.Label>{t('confirm pass')}</Form.Label>
                       {
                         formik.errors.passConfirmation && formik.touched.passConfirmation
-                          ? <Form.Control.Feedback
-                          type="invalid"
-                          style={{ display: 'block' }}>
-                          {formik.errors.passConfirmation}
-                          </Form.Control.Feedback>
+                          ? (<Form.Control.Feedback
+                              type="invalid"
+                              style={
+                                { display: 'block' }
+                              }>
+                              {formik.errors.passConfirmation}
+                            </Form.Control.Feedback>)
                           : null
                       }
                     </Form.Group>

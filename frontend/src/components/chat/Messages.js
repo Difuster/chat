@@ -13,14 +13,17 @@ const renderMessages = (msgs) => msgs.map((m) => {
   return (
     <div key={m.id}>
       <span>
-        <b>{m.user}</b>: {m.value}
+        <b>{m.user}</b>
+        :
+        {' '}
+        {m.value}
       </span>
       <br />
     </div>
   );
 });
 
-function Messages(props) {
+function Messages({ currentChannelId, currentChannelName, getUserName }) {
   const scrollToBottom = (el) => {
     const height = el.current.scrollHeight;
     el.current.scroll(0, height);
@@ -28,7 +31,7 @@ function Messages(props) {
 
   const messages = useSelector((state) => state.messages.messages);
   const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
-  const currentChannelMessages = getCurrentChannelMessages(messages, props.currentChannelId);
+  const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
 
   const dispatch = useDispatch();
   const { socket, sendMessage } = useSocket();
@@ -42,11 +45,11 @@ function Messages(props) {
     onSubmit: (values) => {
       const messageData = {
         value: values.message,
-        user: props.getUserName(),
-        channelId: props.currentChannelId,
+        user: getUserName(),
+        channelId: currentChannelId,
       };
       sendMessage(messageData);
-      values.message = '';
+      formik.values.message = '';
     },
   });
 
@@ -59,14 +62,17 @@ function Messages(props) {
       console.log('dispatch: addMessage', data);
       dispatch(addMessage(data));
     });
-  }, [sendMessage]);
+  }, [socket, sendMessage, dispatch]);
 
   return (
     <Col className="p-0 h-100">
       <div className="d-flex flex-column h-100">
         <div className="mb-4 p-3 shadow-sm">
           <p className="m-0">
-            <b>#{' '}{props.currentChannelName}</b>
+            <b>
+            #
+            {' '}
+            {currentChannelName}</b>
           </p>
           <span className="text-muted">
             {t('messageCounter.count', { count: currentChannelMessages.length })}
@@ -78,16 +84,18 @@ function Messages(props) {
         <div className="mt-auto px-5 py-3">
           <Form onSubmit={formik.handleSubmit}>
             <Form.Group className="d-flex">
-              <Form.Control name="message"
+              <Form.Control
+                name="message"
                 type="text"
                 autoComplete="off"
                 aria-label={t('ariaLabel')}
                 placeholder={t('placeholder')}
                 className="me-2"
                 value={filter.clean(formik.values.message)}
-                onChange={formik.handleChange}/>
+                onChange={formik.handleChange}
+              />
               <Button variant="success" type="submit" disabled="">
-                <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} /></span>
+                <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} alt="send"/></span>
               </Button>
             </Form.Group>
           </Form>
