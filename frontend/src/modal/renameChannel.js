@@ -73,16 +73,17 @@ const RenameChannelModal = ({ items, onHide }) => {
               data-testid="input-channel"
               name="channel"
             />
+            <Form.Label htmlFor="channel" className="visually-hidden">{t('channel name')}</Form.Label>
             {
               err
                 ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{err}</Form.Control.Feedback>
                 : <br />
             }
-            <div className="d-flex justify-content-end">
-              <Button className="me-2" type="button" variant="secondary" onClick={() => onHide()}>{t('cancel')}</Button>
-              <Button type="submit" variant="primary">{t('confirm')}</Button>
-            </div>
           </Form.Group>
+          <div className="d-flex justify-content-end">
+            <Button className="me-2" type="button" variant="secondary" onClick={() => onHide()}>{t('cancel')}</Button>
+            <Button type="submit" variant="primary">{t('confirm')}</Button>
+          </div>
         </form>
       </Modal.Body>
     </Modal>

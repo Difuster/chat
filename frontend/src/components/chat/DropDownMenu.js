@@ -9,7 +9,7 @@ const DropDownMenu = ({
   return (
     <>
       <Dropdown.Toggle id="dropdown-basic" variant={variant}>
-        <span className="visually-hidden">{t('channels')}</span>
+        <span className="visually-hidden">{t('channel control')}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>

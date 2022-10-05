@@ -9,7 +9,8 @@ export default {
       channels: 'Каналы',
       remove: 'Удалить',
       rename: 'Переименовать',
-      'add button': '+'
+      'add button': '+',
+      'channel control': 'Управление каналом'
     },
     messages: {
       messageCounter: {
@@ -74,6 +75,7 @@ export default {
       },
       renameChannel: {
         errors: {
+          'channel name': 'Имя канала',
           required: 'Поле не должно быть пустым',
           min: 'Должно быть не менее 3 символов',
           notOneOf: 'Канал с таким названием уже существует'
