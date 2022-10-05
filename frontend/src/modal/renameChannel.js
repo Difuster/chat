@@ -72,6 +72,7 @@ const RenameChannelModal = ({ items, onHide }) => {
               value={formik.values.channel}
               data-testid="input-channel"
               name="channel"
+              id="channel"
             />
             <Form.Label htmlFor="channel" className="visually-hidden">{t('channel name')}</Form.Label>
             {
