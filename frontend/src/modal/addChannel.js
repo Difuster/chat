@@ -75,17 +75,17 @@ const AddChannelModal = ({ items, onHide }) => {
               name="channel"
               id="channel"
             />
-            <Form.Label className="visually-hidden">{t('channel name')}</Form.Label>
+            <Form.Label htmlFor="channel" className="visually-hidden">{t('channel name')}</Form.Label>
             {
               err
                 ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{err}</Form.Control.Feedback>
                 : <br />
             }
-            <div className="d-flex justify-content-end">
-              <Button className="me-2" type="button" variant="secondary" onClick={onHide}>{t('cancel')}</Button>
-              <Button type="submit" variant="primary">{t('add')}</Button>
-            </div>
           </Form.Group>
+          <div className="d-flex justify-content-end">
+            <Button className="me-2" type="button" variant="secondary" onClick={onHide}>{t('cancel')}</Button>
+            <Button type="submit" variant="primary">{t('add')}</Button>
+          </div>
         </Form>
       </Modal.Body>
     </Modal>
