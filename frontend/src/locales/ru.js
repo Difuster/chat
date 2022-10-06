@@ -84,7 +84,7 @@ export default {
         cancel: 'Отменить',
         confirm: 'Отправить',
         'channel is renamed': 'Канал переименован',
-      }
+      },
     },
   },
 };

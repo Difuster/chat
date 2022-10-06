@@ -70,9 +70,10 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
         <div className="mb-4 p-3 shadow-sm">
           <p className="m-0">
             <b>
-            #
-            {' '}
-            {currentChannelName}</b>
+              #
+              {' '}
+              {currentChannelName}
+            </b>
           </p>
           <span className="text-muted">
             {t('messageCounter.count', { count: currentChannelMessages.length })}
@@ -95,7 +96,7 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
                 onChange={formik.handleChange}
               />
               <Button variant="success" type="submit" disabled="">
-                <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} alt="send"/></span>
+                <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} alt="send" /></span>
               </Button>
             </Form.Group>
           </Form>

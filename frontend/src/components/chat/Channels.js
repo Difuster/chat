@@ -20,7 +20,7 @@ function Channels({
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
           <Button
-            className='w-100 rounded-0 text-start'
+            className="w-100 rounded-0 text-start"
             variant={variant}
             onClick={() => dispatch(getCurrentChannelId(channel.id))}
           >
@@ -29,13 +29,15 @@ function Channels({
             {channel.name}
           </Button>
           {channel.removable
-            ? (<DropDownMenu
+            ? (
+              <DropDownMenu
                 name={channel.name}
                 id={channel.id}
                 variant={variant}
                 openModalRenameChannel={openModalRenameChannel}
                 openModalRemoveChannel={openModalRemoveChannel}
-              />)
+              />
+            )
             : null}
         </Dropdown>
       </li>
@@ -64,7 +66,8 @@ function Channels({
         <span>
           {t('channels')}
         </span>
-        <Button onClick={() => openModalAddChannel()}
+        <Button
+          onClick={() => openModalAddChannel()}
           role="button"
           variant="outline-primary"
           className="btn-sm px-2 py-0 noFocus"

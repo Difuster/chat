@@ -11,7 +11,7 @@ const currentChannelIdSlice = createSlice({
     getCurrentChannelId: (state, action) => {
       Object.assign(state, { id: action.payload });
     },
-  }
+  },
 });
 
 export const { getCurrentChannelId } = currentChannelIdSlice.actions;

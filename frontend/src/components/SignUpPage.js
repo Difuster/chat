@@ -102,13 +102,15 @@ function SignUpPage() {
                       <Form.Label>{t('name')}</Form.Label>
                       {
                         formik.errors.username && formik.touched.username
-                          ? (<Form.Control.Feedback
-                              type="invalid"
-                              style={
-                                { display: 'block' }
-                              }>
-                              {formik.errors.username}
-                            </Form.Control.Feedback>)
+                          ? (
+                          <Form.Control.Feedback
+                            type="invalid"
+                            style={
+                              { display: 'block' }}
+                          >
+                            {formik.errors.username}
+                          </Form.Control.Feedback>
+                          )
                           : null
                       }
                     </Form.Group>

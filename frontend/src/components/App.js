@@ -52,8 +52,8 @@ function App() {
               getNewChannel,
               removeChannel,
               renameChannel,
-            }
-          }>
+            }}
+          >
             <Header />
             <Routes>
               <Route path="/" element={<MainPage />} />
