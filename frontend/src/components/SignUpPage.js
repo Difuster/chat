@@ -103,13 +103,14 @@ function SignUpPage() {
                       {
                         formik.errors.username && formik.touched.username
                           ? (
-                          <Form.Control.Feedback
-                            type="invalid"
-                            style={
-                              { display: 'block' }}
-                          >
-                            {formik.errors.username}
-                          </Form.Control.Feedback>
+                            <Form.Control.Feedback
+                              type="invalid"
+                              style={
+                                { display: 'block' }
+                              }
+                            >
+                              {formik.errors.username}
+                            </Form.Control.Feedback>
                           )
                           : null
                       }
@@ -129,13 +130,16 @@ function SignUpPage() {
                       <Form.Label>{t('pass')}</Form.Label>
                       {
                         formik.errors.password && formik.touched.password
-                          ? (<Form.Control.Feedback
+                          ? (
+                            <Form.Control.Feedback
                               type="invalid"
                               style={
                                 { display: 'block' }
-                              }>
+                              }
+                            >
                               {formik.errors.password}
-                            </Form.Control.Feedback>)
+                            </Form.Control.Feedback>
+                          )
                           : null
                       }
                     </Form.Group>
@@ -154,13 +158,16 @@ function SignUpPage() {
                       <Form.Label>{t('confirm pass')}</Form.Label>
                       {
                         formik.errors.passConfirmation && formik.touched.passConfirmation
-                          ? (<Form.Control.Feedback
+                          ? (
+                            <Form.Control.Feedback
                               type="invalid"
                               style={
                                 { display: 'block' }
-                              }>
+                              }
+                            >
                               {formik.errors.passConfirmation}
-                            </Form.Control.Feedback>)
+                            </Form.Control.Feedback>
+                          )
                           : null
                       }
                     </Form.Group>
