@@ -7,7 +7,8 @@ import useSocket from '../../hooks/socketHook.jsx';
 import DropDownMenu from './DropDownMenu';
 
 function Channels({
-  channels, currentChannelId, getCurrentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel,
+  channels, currentChannelId, getCurrentChannelId,
+  openModalAddChannel, openModalRenameChannel, openModalRemoveChannel,
 }) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ function Channels({
     socket.on('renameChannel', (data) => {
       dispatch(renameChannel(data));
     });
-  }, [socket, dispatch]);
+  }, [socket, dispatch, currentChannelId, getCurrentChannelId]);
 
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">

@@ -43,7 +43,7 @@ const renderModal = (type, items, toClose) => {
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { loggedIn, setLoggedIn } = useAuth();
+  const { loggedIn, logIn } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
   const [response, setResponse] = useState(false);
@@ -60,7 +60,7 @@ function MainPage() {
   };
 
   if (localStorage.length > 0) {
-    setLoggedIn(true);
+    logIn();
   }
 
   const openModalAddChannel = () => {

@@ -43,9 +43,12 @@ function App() {
 
   return (
     <div className="d-flex flex-column h-100 bg-light">
-      <AuthContext.Provider value={{
-        loggedIn, setLoggedIn, logIn, logOut
-      }}>
+      <AuthContext.Provider value={
+        {
+          loggedIn, setLoggedIn, logIn, logOut,
+        }
+        }
+      >
         <ToastContext.Provider value={{ notify }}>
           <SocketContext.Provider value={
             {

@@ -8,19 +8,16 @@ import sendMessageIcon from '../../imgs/send_message.png';
 import useSocket from '../../hooks/socketHook.jsx';
 import { addMessage } from '../../slices/messagesSlice.js';
 
-const renderMessages = (msgs) => msgs.map((m) => {
-  return (
-    <div key={m.id}>
-      <span>
-        <b>{m.user}</b>
-        :
-        {' '}
-        {m.value}
-      </span>
-      <br />
-    </div>
-  );
-});
+const renderMessages = (msgs) => msgs.map((m) => (
+  <div key={m.id}>
+    <span>
+      <b>{m.user}</b>
+      :
+      {' '}
+      {m.value}
+    </span>
+    <br />
+  </div>));
 
 function Messages({ currentChannelId, currentChannelName, getUserName }) {
   const scrollToBottom = (el) => {
@@ -113,7 +110,8 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
                 <span>
                   <img
                     style={{ width: '20px', height: '20px' }}
-                    src={sendMessageIcon} alt="send"
+                    src={sendMessageIcon}
+                    alt="send"
                   />
                 </span>
               </Button>

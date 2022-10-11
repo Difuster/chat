@@ -20,10 +20,6 @@ function SignUpPage() {
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
 
-  if (loggedIn) {
-    return <Navigate to="/" />;
-  }
-
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -67,6 +63,10 @@ function SignUpPage() {
       }
     },
   });
+
+  // if (loggedIn) {
+  //   return <Navigate to="/" />;
+  // }
 
   return (
     <Container className="h-100" fluid>

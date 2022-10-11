@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Navigate, Link, useLocation, useNavigate
+  Navigate, Link, useLocation, useNavigate,
 } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
@@ -22,10 +22,6 @@ function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
-
-  if (loggedIn) {
-    return <Navigate to="/" />;
-  }
 
   useEffect(() => {
     inputRef.current.focus();
@@ -60,6 +56,10 @@ function LoginPage() {
       }
     },
   });
+
+  // if (loggedIn) {
+  //   return <Navigate to="/" />;
+  // }
 
   return (
     <Container className="h-100" fluid>

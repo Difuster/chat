@@ -11,7 +11,7 @@ function PageNotFound() {
     <Row className="row justify-content-center align-content-center h-100">
       <Col>
         <div className="text-center align-content-center">
-        <img src={notFoundImg} alt="error 404" />
+          <img src={notFoundImg} alt="error 404" />
           <h2>{t('page not found')}</h2>
           <p className="text-muted">
             {t('link to')}
