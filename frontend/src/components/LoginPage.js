@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Link, useLocation, useNavigate,
+  Navigate, Link, useLocation, useNavigate,
 } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
@@ -17,7 +17,7 @@ function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
   const toast = useToast();
-  const { logIn } = useAuth();
+  const { loggedIn, logIn } = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
@@ -57,9 +57,9 @@ function LoginPage() {
     },
   });
 
-  // if (loggedIn) {
-  //   return <Navigate to="/" />;
-  // }
+  if (loggedIn) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Container className="h-100" fluid>
