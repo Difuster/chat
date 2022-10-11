@@ -28,7 +28,7 @@ function App() {
   };
 
   const getNewChannel = (channel) => {
-    socket.emit('newChannel', { channel });
+    socket.emit('newChannel', channel);
   };
 
   const removeChannel = (id) => {
@@ -43,7 +43,9 @@ function App() {
 
   return (
     <div className="d-flex flex-column h-100 bg-light">
-      <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+      <AuthContext.Provider value={{
+        loggedIn, setLoggedIn, logIn, logOut
+      }}>
         <ToastContext.Provider value={{ notify }}>
           <SocketContext.Provider value={
             {

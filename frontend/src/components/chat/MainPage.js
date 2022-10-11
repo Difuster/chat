@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import Channels from './Channels';
 import Messages from './Messages';
+import Loader from '../Loader';
 import { loadChannels } from '../../slices/channelsSlice.js';
 import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import { loadMessages } from '../../slices/messagesSlice.js';
@@ -42,9 +43,10 @@ const renderModal = (type, items, toClose) => {
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { loggedIn } = useAuth();
+  const { loggedIn, setLoggedIn } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
+  const [response, setResponse] = useState(false);
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
   const currentChannelName = channels
@@ -56,6 +58,10 @@ function MainPage() {
     const name = JSON.parse(userId).username;
     return name;
   };
+
+  if (localStorage.length > 0) {
+    setLoggedIn(true);
+  }
 
   const openModalAddChannel = () => {
     setModalType('addChannel');
@@ -82,6 +88,7 @@ function MainPage() {
     const fetchContent = async () => {
       if (loggedIn) {
         const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
+        setResponse(true);
         dispatch(loadChannels(data.channels));
         dispatch(getCurrentChannelId(data.currentChannelId));
         dispatch(loadMessages(data.messages));
@@ -92,6 +99,10 @@ function MainPage() {
 
     fetchContent();
   }, [loggedIn, dispatch]);
+
+  if (loggedIn && !response) {
+    return <Loader />;
+  }
 
   if (!loggedIn) {
     return <Navigate to="login" />;
@@ -104,6 +115,7 @@ function MainPage() {
         <Channels
           channels={channels}
           currentChannelId={currentChannelId}
+          getCurrentChannelId={getCurrentChannelId}
           openModalAddChannel={openModalAddChannel}
           openModalRenameChannel={openModalRenameChannel}
           openModalRemoveChannel={openModalRemoveChannel}

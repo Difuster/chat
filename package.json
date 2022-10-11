@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/Difuster/frontend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Difuster/frontend-project-lvl4/actions)",
+  "description": "Free chat",
   "type": "module",
   "main": "index.js",
   "proxy": "http://localhost:5001",

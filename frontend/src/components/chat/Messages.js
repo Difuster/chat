@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Col, Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,6 @@ import useSocket from '../../hooks/socketHook.jsx';
 import { addMessage } from '../../slices/messagesSlice.js';
 
 const renderMessages = (msgs) => msgs.map((m) => {
-  console.log(m.id);
   return (
     <div key={m.id}>
       <span>
@@ -36,6 +35,8 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
   const dispatch = useDispatch();
   const { socket, sendMessage } = useSocket();
   const messagesBox = useRef(null);
+  const inputRef = useRef();
+  const [disabled, setDisabled] = useState(true);
 
   const { t } = useTranslation('translation', { keyPrefix: 'messages' });
   const formik = useFormik({
@@ -54,8 +55,20 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
   });
 
   useEffect(() => {
+    inputRef.current.focus();
+  }, [currentChannelId]);
+
+  useEffect(() => {
     scrollToBottom(messagesBox);
-  }, [messages]);
+  }, [messages, currentChannelId]);
+
+  useEffect(() => {
+    if (formik.values.message.length > 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [formik.values.message]);
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
@@ -94,9 +107,15 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
                 className="me-2"
                 value={filter.clean(formik.values.message)}
                 onChange={formik.handleChange}
+                ref={inputRef}
               />
-              <Button variant="success" type="submit" disabled="">
-                <span><img style={{ width: '20px', height: '20px' }} src={sendMessageIcon} alt="send" /></span>
+              <Button variant="success" type="submit" disabled={disabled}>
+                <span>
+                  <img
+                    style={{ width: '20px', height: '20px' }}
+                    src={sendMessageIcon} alt="send"
+                  />
+                </span>
               </Button>
             </Form.Group>
           </Form>

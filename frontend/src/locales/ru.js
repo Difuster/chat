@@ -47,6 +47,8 @@ export default {
       pass: 'Пароль',
       'confirm pass': 'Подтвердите пароль',
       register: 'Зарегистрироваться',
+      'have account': 'Есть аккаунт?',
+      chatLogin: 'Вход в чат',
     },
     notFoundPage: {
       'page not found': 'Страница не найдена',
@@ -85,6 +87,9 @@ export default {
         confirm: 'Отправить',
         'channel is renamed': 'Канал переименован',
       },
+    },
+    loader: {
+      loading: 'Загрузка...',
     },
   },
 };

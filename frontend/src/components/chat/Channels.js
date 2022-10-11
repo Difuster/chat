@@ -3,12 +3,11 @@ import { useDispatch } from 'react-redux';
 import { ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
-import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import useSocket from '../../hooks/socketHook.jsx';
 import DropDownMenu from './DropDownMenu';
 
 function Channels({
-  channels, currentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel,
+  channels, currentChannelId, getCurrentChannelId, openModalAddChannel, openModalRenameChannel, openModalRemoveChannel,
 }) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
@@ -23,6 +22,7 @@ function Channels({
             className="w-100 rounded-0 text-start"
             variant={variant}
             onClick={() => dispatch(getCurrentChannelId(channel.id))}
+            style={{ overflow: 'hidden' }}
           >
             #
             {' '}
@@ -46,13 +46,15 @@ function Channels({
 
   useEffect(() => {
     socket.on('newChannel', (data) => {
-      dispatch(addChannel({ name: data.channel, id: data.id, removable: data.removable }));
+      dispatch(addChannel({ name: data.name, id: data.id, removable: data.removable }));
       dispatch(getCurrentChannelId(data.id));
     });
 
     socket.on('removeChannel', (data) => {
+      if (currentChannelId === data.id) {
+        dispatch(getCurrentChannelId(1));
+      }
       dispatch(removeChannel(data.id));
-      dispatch(getCurrentChannelId(1));
     });
 
     socket.on('renameChannel', (data) => {

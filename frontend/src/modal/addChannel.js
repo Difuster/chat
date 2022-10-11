@@ -37,7 +37,7 @@ const AddChannelModal = ({ items, onHide }) => {
       const name = values.channel;
       validateChannelName(name, items.channelsNames)
         .then((channelName) => {
-          getNewChannel(channelName);
+          getNewChannel({ name: channelName });
           formik.values.channel = '';
           onHide();
           toast.notify(t('channel is added'));

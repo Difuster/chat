@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Navigate, Link, useLocation, useNavigate
+} from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
 } from 'react-bootstrap';
@@ -15,11 +17,15 @@ function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
   const toast = useToast();
-  const auth = useAuth();
+  const { loggedIn, logIn } = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
+
+  if (loggedIn) {
+    return <Navigate to="/" />;
+  }
 
   useEffect(() => {
     inputRef.current.focus();
@@ -36,7 +42,7 @@ function LoginPage() {
       try {
         const res = await axios.post(routes.loginPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
-        auth.logIn();
+        logIn();
         setErr('');
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);

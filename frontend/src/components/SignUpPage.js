@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col, Alert,
 } from 'react-bootstrap';
@@ -15,10 +15,14 @@ import signUpPic from '../imgs/sign_up_pic.png';
 function SignUpPage() {
   const [regFailed, setRegFailed] = useState(false);
   const toast = useToast();
-  const auth = useAuth();
+  const { loggedIn, logIn } = useAuth();
   const inputRef = useRef();
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
+
+  if (loggedIn) {
+    return <Navigate to="/" />;
+  }
 
   useEffect(() => {
     inputRef.current.focus();
@@ -48,7 +52,7 @@ function SignUpPage() {
         const res = await axios.post(routes.signUpPath(), values);
         localStorage.setItem('userId', JSON.stringify(res.data));
         setRegFailed(false);
-        auth.logIn();
+        logIn();
         navigate('/');
       } catch (error) {
         if (error.code === 'ERR_NETWORK') {
@@ -176,6 +180,15 @@ function SignUpPage() {
                 </Col>
               </Row>
             </Card.Body>
+            <Card.Footer className="p-4">
+              <div className="text-center">
+                <span>
+                  {t('have account')}
+                  {' '}
+                </span>
+                <Link to="/login">{t('chatLogin')}</Link>
+              </div>
+            </Card.Footer>
           </Card>
         </Col>
       </Row>
