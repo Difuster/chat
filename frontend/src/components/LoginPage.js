@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Navigate, Link, useLocation, useNavigate,
+  Link, useLocation, useNavigate,
 } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
@@ -17,7 +17,7 @@ function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
   const toast = useToast();
-  const { loggedIn, logIn } = useAuth();
+  const { logIn } = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();

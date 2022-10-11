@@ -17,7 +17,8 @@ const renderMessages = (msgs) => msgs.map((m) => (
       {m.value}
     </span>
     <br />
-  </div>));
+  </div>
+));
 
 function Messages({ currentChannelId, currentChannelName, getUserName }) {
   const scrollToBottom = (el) => {
