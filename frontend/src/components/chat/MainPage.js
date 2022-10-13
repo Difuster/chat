@@ -8,24 +8,14 @@ import axios from 'axios';
 import Channels from './Channels';
 import Messages from './Messages';
 import Loader from '../Loader';
-import { loadChannels } from '../../slices/channelsSlice.js';
+import { actions as channelActions } from '../../slices/channelsSlice.js';
 import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
-import { loadMessages } from '../../slices/messagesSlice.js';
+import { actions as messageActions } from '../../slices/messagesSlice.js';
 import AddChannelModal from '../../modal/addChannel';
 import RenameChannelModal from '../../modal/renameChannel';
 import RemoveChannelModal from '../../modal/removeChannel';
 import useAuth from '../../hooks/authHook.jsx';
 import routes from '../../routes';
-
-const getAuthHeader = () => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
-
-  if (userId && userId.token) {
-    return { Authorization: `Bearer ${userId.token}` };
-  }
-
-  return {};
-};
 
 const renderModal = (type, items, toClose) => {
   switch (type) {
@@ -43,10 +33,27 @@ const renderModal = (type, items, toClose) => {
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { loggedIn, logIn } = useAuth();
+  const { loggedIn, logIn, getAuthHeader } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
   const [response, setResponse] = useState(false);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      if (loggedIn) {
+        const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
+        setResponse(true);
+        dispatch(channelActions.loadChannels(data.channels));
+        dispatch(getCurrentChannelId(data.currentChannelId));
+        dispatch(messageActions.loadMessages(data.messages));
+      } else {
+        console.log(loggedIn);
+      }
+    };
+
+    fetchContent();
+  }, [loggedIn, dispatch]);
+
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);
   const currentChannelName = channels
@@ -83,22 +90,6 @@ function MainPage() {
   const closeModal = () => {
     setModalType(null);
   };
-
-  useEffect(() => {
-    const fetchContent = async () => {
-      if (loggedIn) {
-        const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-        setResponse(true);
-        dispatch(loadChannels(data.channels));
-        dispatch(getCurrentChannelId(data.currentChannelId));
-        dispatch(loadMessages(data.messages));
-      } else {
-        console.log(loggedIn);
-      }
-    };
-
-    fetchContent();
-  }, [loggedIn, dispatch]);
 
   if (loggedIn && !response) {
     return <Loader />;

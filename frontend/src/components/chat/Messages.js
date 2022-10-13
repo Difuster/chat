@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Col, Form, Button } from 'react-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
-import sendMessageIcon from '../../imgs/send_message.png';
 import useSocket from '../../hooks/socketHook.jsx';
-import { addMessage } from '../../slices/messagesSlice.js';
+import sendMessageIcon from '../../imgs/send_message.png';
 
 const renderMessages = (msgs) => msgs.map((m) => (
   <div key={m.id}>
@@ -26,12 +25,12 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
     el.current.scroll(0, height);
   };
 
+  const { sendMessage } = useSocket();
+
   const messages = useSelector((state) => state.messages.messages);
   const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
   const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
 
-  const dispatch = useDispatch();
-  const { socket, sendMessage } = useSocket();
   const messagesBox = useRef(null);
   const inputRef = useRef();
   const [disabled, setDisabled] = useState(true);
@@ -67,13 +66,6 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
       setDisabled(true);
     }
   }, [formik.values.message]);
-
-  useEffect(() => {
-    socket.on('newMessage', (data) => {
-      console.log('dispatch: addMessage', data);
-      dispatch(addMessage(data));
-    });
-  }, [socket, sendMessage, dispatch]);
 
   return (
     <Col className="p-0 h-100">

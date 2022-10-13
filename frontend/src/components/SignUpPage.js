@@ -64,10 +64,6 @@ function SignUpPage() {
     },
   });
 
-  if (loggedIn) {
-    return <Navigate to="/" />;
-  }
-
   return (
     <Container className="h-100" fluid>
       <Row className="justify-content-center align-content-center h-100">

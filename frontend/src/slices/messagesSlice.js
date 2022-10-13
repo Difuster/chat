@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { removeChannel } from './channelsSlice';
+import { actions as channelActions } from './channelsSlice';
 
-// Начальное значение
 const initialState = {
   messages: [],
 };
@@ -27,7 +26,7 @@ const messagesSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(removeChannel, (state, action) => {
+    builder.addCase(channelActions.removeChannel, (state, action) => {
       const channelId = action.payload;
       const restEntities = state.messages.filter((item) => item.channelId !== channelId);
       Object.assign(state, { messages: restEntities });
@@ -35,9 +34,6 @@ const messagesSlice = createSlice({
   },
 });
 
-// Слайс генерирует действия, которые экспортируются отдельно
-// Действия генерируются автоматически из имен ключей редьюсеров
-export const { loadMessages, addMessage } = messagesSlice.actions;
+export const { actions } = messagesSlice;
 
-// По умолчанию экспортируется редьюсер сгенерированный слайсом
 export default messagesSlice.reducer;

@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { addChannel, removeChannel, renameChannel } from '../../slices/channelsSlice.js';
-import useSocket from '../../hooks/socketHook.jsx';
 import DropDownMenu from './DropDownMenu';
 
 function Channels({
@@ -12,7 +10,6 @@ function Channels({
 }) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
-  const { socket } = useSocket();
 
   const renderChannels = (chnls, id) => chnls.map((channel) => {
     const variant = id === channel.id ? 'secondary' : 'light';
@@ -44,24 +41,6 @@ function Channels({
       </li>
     );
   });
-
-  useEffect(() => {
-    socket.on('newChannel', (data) => {
-      dispatch(addChannel({ name: data.name, id: data.id, removable: data.removable }));
-      dispatch(getCurrentChannelId(data.id));
-    });
-
-    socket.on('removeChannel', (data) => {
-      if (currentChannelId === data.id) {
-        dispatch(getCurrentChannelId(1));
-      }
-      dispatch(removeChannel(data.id));
-    });
-
-    socket.on('renameChannel', (data) => {
-      dispatch(renameChannel(data));
-    });
-  }, [socket, dispatch, currentChannelId, getCurrentChannelId]);
 
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
