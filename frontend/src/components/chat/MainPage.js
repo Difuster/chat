@@ -52,7 +52,7 @@ function MainPage() {
     };
 
     fetchContent();
-  }, [loggedIn, dispatch]);
+  }, [loggedIn, dispatch, getAuthHeader]);
 
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.currentChannelId.id);

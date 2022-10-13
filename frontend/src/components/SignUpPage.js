@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Navigate, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col, Alert,
 } from 'react-bootstrap';
@@ -15,7 +15,7 @@ import signUpPic from '../imgs/sign_up_pic.png';
 function SignUpPage() {
   const [regFailed, setRegFailed] = useState(false);
   const toast = useToast();
-  const { loggedIn, logIn } = useAuth();
+  const { logIn } = useAuth();
   const inputRef = useRef();
   const navigate = useNavigate();
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });

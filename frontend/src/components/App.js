@@ -29,7 +29,7 @@ function App() {
     <div className="d-flex flex-column h-100 bg-light">
       <AuthContextProvider>
         <ToastContext.Provider value={{ notify }}>
-          <SocketContextProvider socket={ socket }>
+          <SocketContextProvider socket={socket}>
             <Header />
             <Routes>
               <Route exact path="/" element={<Path><MainPage /></Path>} />

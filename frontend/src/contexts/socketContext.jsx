@@ -1,4 +1,4 @@
-import { createContext, useEffect } from 'react';
+import React, { createContext, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { actions as channelActions } from '../slices/channelsSlice.js';
 import { actions as messageActions } from '../slices/messagesSlice.js';
@@ -25,7 +25,9 @@ const SocketContextProvider = ({ children, socket }) => {
 
   useEffect(() => {
     socket.on('newChannel', (data) => {
-      dispatch(channelActions.addChannel({ name: data.name, id: data.id, removable: data.removable }));
+      dispatch(channelActions.addChannel({
+        name: data.name, id: data.id, removable: data.removable,
+      }));
     });
 
     socket.on('removeChannel', (data) => {
