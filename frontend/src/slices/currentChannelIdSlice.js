@@ -18,7 +18,7 @@ const currentChannelIdSlice = createSlice({
       .addCase(channelActions.addChannel, (state, action) => ({ ...state, id: action.payload.id }))
       .addCase(
         channelActions.removeChannel,
-        (state, action) => (state.id === action.payload ? { ...state, id: 1 } : { ...state })
+        (state, action) => (state.id === action.payload ? { ...state, id: 1 } : { ...state }),
       );
   },
 });
