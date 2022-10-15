@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
-import useSocket from '../../hooks/socketHook.jsx';
+import { useApi } from '../../contexts/apiContext.jsx';
 import sendMessageIcon from '../../imgs/send_message.png';
 
 const renderMessages = (msgs) => msgs.map((m) => (
@@ -25,7 +25,7 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
     el.current.scroll(0, height);
   };
 
-  const { sendMessage } = useSocket();
+  const { sendMessage } = useApi();
 
   const messages = useSelector((state) => state.messages.messages);
   const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
@@ -60,7 +60,8 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
   }, [messages, currentChannelId]);
 
   useEffect(() => {
-    if (formik.values.message.length > 0) {
+    const trimmedText = formik.values.message.trim();
+    if (trimmedText.length > 0) {
       setDisabled(false);
     } else {
       setDisabled(true);

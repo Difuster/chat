@@ -3,23 +3,21 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import useToast from '../hooks/toastHook.jsx';
-import useSocket from '../hooks/socketHook.jsx';
+import { useApi } from '../contexts/apiContext.jsx';
 
 const RenameChannelModal = ({ items, onHide }) => {
-  const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.renameChannel' });
   const [err, setErr] = useState(false);
-  const { renameChannel } = useSocket();
+  const { renameChannel, notify } = useApi();
 
   const validateChannelName = (newChannel, channels) => {
     yup.setLocale({
       mixed: {
-        notOneOf: t('errors.notOneOf'),
+        notOneOf: 'notOneOf',
       },
       string: {
-        required: t('errors.required'),
-        min: t('errors.min'),
+        required: 'required',
+        min: 'min',
       },
     });
 
@@ -39,7 +37,7 @@ const RenameChannelModal = ({ items, onHide }) => {
           renameChannel(id, channelName);
           formik.values.channel = '';
           onHide();
-          toast.notify(t('channel is renamed'));
+          notify(t('channel is renamed'));
           setErr(false);
         })
         .catch((error) => {
@@ -77,7 +75,7 @@ const RenameChannelModal = ({ items, onHide }) => {
             <Form.Label htmlFor="channel" className="visually-hidden">{t('channel name')}</Form.Label>
             {
               err
-                ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{err}</Form.Control.Feedback>
+                ? <Form.Control.Feedback type="invalid" style={{ display: 'block' }}>{t(`errors.${err}`)}</Form.Control.Feedback>
                 : <br />
             }
           </Form.Group>

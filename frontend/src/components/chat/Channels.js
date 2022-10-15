@@ -17,7 +17,7 @@ function Channels({
       <li className="nav-item w-100" key={channel.id} id={channel.id}>
         <Dropdown as={ButtonGroup} className="d-flex">
           <Button
-            className="w-100 rounded-0 text-start"
+            className="w-100 rounded-0 text-start text-truncate"
             variant={variant}
             onClick={() => dispatch(getCurrentChannelId(channel.id))}
             style={{ overflow: 'hidden' }}

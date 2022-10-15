@@ -1,13 +1,11 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import useToast from '../hooks/toastHook.jsx';
-import useSocket from '../hooks/socketHook.jsx';
+import { useApi } from '../contexts/apiContext.jsx';
 
 const RemoveChannelModal = ({ items, onHide }) => {
-  const toast = useToast();
   const { t } = useTranslation('translation', { keyPrefix: 'modals.removeChannel' });
-  const { removeChannel } = useSocket();
+  const { removeChannel, notify } = useApi();
 
   return (
     <Modal show>
@@ -32,7 +30,7 @@ const RemoveChannelModal = ({ items, onHide }) => {
             onClick={() => {
               removeChannel(items.id);
               onHide();
-              toast.notify(t('channel is removed'));
+              notify(t('channel is removed'));
             }}
           >
             {t('remove')}

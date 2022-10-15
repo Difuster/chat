@@ -4,7 +4,7 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/authHook.jsx';
+import { useAuth } from '../contexts/authContext.jsx';
 
 function Header() {
   const { t } = useTranslation('translation', { keyPrefix: 'header' });

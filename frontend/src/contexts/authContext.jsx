@@ -1,12 +1,12 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 
 const AuthContext = createContext({});
 
 const AuthContextProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('userId'));
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('userId'));
 
   const getAuthHeader = () => {
-    const userId = JSON.parse(localStorage.getItem('userId'));
+    const userId = JSON.parse(loggedIn);
 
     if (userId && userId.token) {
       return { Authorization: `Bearer ${userId.token}` };
@@ -15,10 +15,14 @@ const AuthContextProvider = ({ children }) => {
     return {};
   };
 
-  const logIn = () => setLoggedIn(true);
+  const logIn = (data) => {
+    localStorage.setItem('userId', JSON.stringify(data));
+    setLoggedIn(localStorage.getItem('userId'));
+  };
+
   const logOut = () => {
     localStorage.removeItem('userId');
-    setLoggedIn(false);
+    setLoggedIn(localStorage.getItem('userId'));
   };
 
   const value = {
@@ -35,4 +39,6 @@ const AuthContextProvider = ({ children }) => {
   );
 };
 
-export { AuthContext, AuthContextProvider };
+const useAuth = () => useContext(AuthContext);
+
+export { AuthContext, AuthContextProvider, useAuth };

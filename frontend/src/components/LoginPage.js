@@ -1,21 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Link, useLocation, useNavigate, Navigate
+} from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
 } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/authHook.jsx';
-import useToast from '../hooks/toastHook.jsx';
+import { useAuth } from '../contexts/authContext.jsx';
+import { useApi } from '../contexts/apiContext.jsx';
 import routes from '../routes';
 import enterPic from '../imgs/enter_pic.png';
 
 function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
-  const toast = useToast();
-  const { logIn } = useAuth();
+  const notify = useApi();
+  const { loggedIn, logIn } = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,14 +37,13 @@ function LoginPage() {
 
       try {
         const res = await axios.post(routes.loginPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
-        logIn();
+        logIn(res.data);
         setErr('');
         const { from } = location.state || { from: { pathname: '/' } };
         navigate(from);
       } catch (error) {
         if (error.code === 'ERR_NETWORK') {
-          toast.notify(t('network error'));
+          notify(t('network error'));
         }
         if (error.isAxiosError && error.response.status === 401) {
           setAuthFailed(true);

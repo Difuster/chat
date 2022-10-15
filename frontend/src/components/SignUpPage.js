@@ -7,14 +7,14 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/authHook.jsx';
-import useToast from '../hooks/toastHook.jsx';
+import { useAuth } from '../contexts/authContext.jsx';
+import { useApi } from '../contexts/apiContext.jsx';
 import routes from '../routes';
 import signUpPic from '../imgs/sign_up_pic.png';
 
 function SignUpPage() {
   const [regFailed, setRegFailed] = useState(false);
-  const toast = useToast();
+  const notify = useApi();
   const { logIn } = useAuth();
   const inputRef = useRef();
   const navigate = useNavigate();
@@ -46,13 +46,13 @@ function SignUpPage() {
     onSubmit: async (values) => {
       try {
         const res = await axios.post(routes.signUpPath(), values);
-        localStorage.setItem('userId', JSON.stringify(res.data));
+        // localStorage.setItem('userId', JSON.stringify(res.data));
         setRegFailed(false);
-        logIn();
+        logIn(res.data);
         navigate('/');
       } catch (error) {
         if (error.code === 'ERR_NETWORK') {
-          toast.notify(t('errors.network error'));
+          notify(t('errors.network error'));
         }
         if (error.isAxiosError && error.response.status === 409) {
           setRegFailed(true);

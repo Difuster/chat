@@ -9,12 +9,11 @@ import Channels from './Channels';
 import Messages from './Messages';
 import Loader from '../Loader';
 import { actions as channelActions } from '../../slices/channelsSlice.js';
-import { getCurrentChannelId } from '../../slices/currentChannelIdSlice.js';
 import { actions as messageActions } from '../../slices/messagesSlice.js';
 import AddChannelModal from '../../modal/addChannel';
 import RenameChannelModal from '../../modal/renameChannel';
 import RemoveChannelModal from '../../modal/removeChannel';
-import useAuth from '../../hooks/authHook.jsx';
+import { useAuth } from '../../contexts/authContext.jsx';
 import routes from '../../routes';
 
 const renderModal = (type, items, toClose) => {
@@ -33,7 +32,7 @@ const renderModal = (type, items, toClose) => {
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { loggedIn, logIn, getAuthHeader } = useAuth();
+  const { loggedIn, getAuthHeader } = useAuth();
   const [modalType, setModalType] = useState(null);
   const [modalItems, setModalItems] = useState(null);
   const [response, setResponse] = useState(false);
@@ -44,7 +43,7 @@ function MainPage() {
         const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
         setResponse(true);
         dispatch(channelActions.loadChannels(data.channels));
-        dispatch(getCurrentChannelId(data.currentChannelId));
+        dispatch(channelActions.getCurrentChannelId(data.currentChannelId));
         dispatch(messageActions.loadMessages(data.messages));
       } else {
         console.log(loggedIn);
@@ -55,7 +54,7 @@ function MainPage() {
   }, [loggedIn, dispatch, getAuthHeader]);
 
   const channels = useSelector((state) => state.channels.channels);
-  const currentChannelId = useSelector((state) => state.currentChannelId.id);
+  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
   const currentChannelName = channels
     .filter((ch) => ch.id === currentChannelId)
     .map((ch) => ch.name)[0];
@@ -65,10 +64,6 @@ function MainPage() {
     const name = JSON.parse(userId).username;
     return name;
   };
-
-  if (localStorage.length > 0) {
-    logIn();
-  }
 
   const openModalAddChannel = () => {
     setModalType('addChannel');
@@ -106,7 +101,7 @@ function MainPage() {
         <Channels
           channels={channels}
           currentChannelId={currentChannelId}
-          getCurrentChannelId={getCurrentChannelId}
+          getCurrentChannelId={channelActions.getCurrentChannelId}
           openModalAddChannel={openModalAddChannel}
           openModalRenameChannel={openModalRenameChannel}
           openModalRemoveChannel={openModalRemoveChannel}
