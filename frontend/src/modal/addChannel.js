@@ -7,12 +7,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useApi } from '../contexts/apiContext.jsx';
 
-const AddChannelModal = ({ items, onHide }) => {
+const AddChannelModal = ({ handleCloseModal, channels }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'modals.addChannel' });
   const [err, setErr] = useState(false);
   const { getNewChannel, notify } = useApi();
+  const channelsNames = channels.map((channel) => channel.name);
 
-  const validateChannelName = (newChannel, channels) => {
+  const validateChannelName = (newChannelName, ChNames) => {
     yup.setLocale({
       mixed: {
         notOneOf: 'notOneOf',
@@ -23,8 +24,8 @@ const AddChannelModal = ({ items, onHide }) => {
       },
     });
 
-    const schema = yup.string().required().min(3).notOneOf(channels);
-    return schema.validate(newChannel);
+    const schema = yup.string().required().min(3).notOneOf(ChNames);
+    return schema.validate(newChannelName);
   };
 
   const formik = useFormik({
@@ -32,12 +33,12 @@ const AddChannelModal = ({ items, onHide }) => {
       channel: '',
     },
     onSubmit: (values) => {
-      const name = values.channel;
-      validateChannelName(name, items.channelsNames)
-        .then((channelName) => {
-          getNewChannel({ name: channelName });
+      const channelName = values.channel;
+      validateChannelName(channelName, channelsNames)
+        .then((ChName) => {
+          getNewChannel({ name: ChName });
           formik.values.channel = '';
-          onHide();
+          handleCloseModal();
           notify(t('channel is added'));
           setErr(false);
         })
@@ -54,8 +55,8 @@ const AddChannelModal = ({ items, onHide }) => {
   }, []);
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleCloseModal}>
         <Modal.Title>{t('add channel')}</Modal.Title>
       </Modal.Header>
 
@@ -81,12 +82,12 @@ const AddChannelModal = ({ items, onHide }) => {
             }
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button className="me-2" type="button" variant="secondary" onClick={onHide}>{t('cancel')}</Button>
+            <Button className="me-2" type="button" variant="secondary" onClick={handleCloseModal}>{t('cancel')}</Button>
             <Button type="submit" variant="primary">{t('add')}</Button>
           </div>
         </Form>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

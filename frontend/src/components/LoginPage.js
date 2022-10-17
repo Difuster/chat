@@ -17,7 +17,7 @@ function LoginPage() {
   const [err, setErr] = useState('');
   const [authFailed, setAuthFailed] = useState(false);
   const notify = useApi();
-  const { loggedIn, logIn } = useAuth();
+  const { logIn } = useAuth();
   const inputRef = useRef();
   const location = useLocation();
   const navigate = useNavigate();

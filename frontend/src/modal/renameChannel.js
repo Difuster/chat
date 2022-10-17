@@ -5,12 +5,13 @@ import { Modal, Form, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useApi } from '../contexts/apiContext.jsx';
 
-const RenameChannelModal = ({ items, onHide }) => {
+const RenameChannelModal = ({ channels, items, handleCloseModal }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'modals.renameChannel' });
   const [err, setErr] = useState(false);
   const { renameChannel, notify } = useApi();
+  const channelsNames = channels.map((channel) => channel.name);
 
-  const validateChannelName = (newChannel, channels) => {
+  const validateChannelName = (newChannel, ChNames) => {
     yup.setLocale({
       mixed: {
         notOneOf: 'notOneOf',
@@ -21,7 +22,7 @@ const RenameChannelModal = ({ items, onHide }) => {
       },
     });
 
-    const schema = yup.string().required().min(3).notOneOf(channels);
+    const schema = yup.string().required().min(3).notOneOf(ChNames);
     return schema.validate(newChannel);
   };
 
@@ -32,11 +33,11 @@ const RenameChannelModal = ({ items, onHide }) => {
     onSubmit: (values) => {
       const { id } = items;
       const name = values.channel;
-      validateChannelName(name, items.channelsNames)
+      validateChannelName(name, channelsNames)
         .then((channelName) => {
           renameChannel(id, channelName);
           formik.values.channel = '';
-          onHide();
+          handleCloseModal();
           notify(t('channel is renamed'));
           setErr(false);
         })
@@ -53,13 +54,13 @@ const RenameChannelModal = ({ items, onHide }) => {
   }, []);
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleCloseModal}>
         <Modal.Title>{t('rename')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
-        <form onSubmit={formik.handleSubmit}>
+        <Form onSubmit={formik.handleSubmit}>
           <Form.Group>
             <Form.Control
               ref={inputRef}
@@ -80,12 +81,12 @@ const RenameChannelModal = ({ items, onHide }) => {
             }
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button className="me-2" type="button" variant="secondary" onClick={() => onHide()}>{t('cancel')}</Button>
+            <Button className="me-2" type="button" variant="secondary" onClick={() => handleCloseModal()}>{t('cancel')}</Button>
             <Button type="submit" variant="primary">{t('confirm')}</Button>
           </div>
-        </form>
+        </Form>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

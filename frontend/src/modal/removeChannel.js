@@ -3,13 +3,13 @@ import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useApi } from '../contexts/apiContext.jsx';
 
-const RemoveChannelModal = ({ items, onHide }) => {
+const RemoveChannelModal = ({ items, handleCloseModal }) => {
   const { t } = useTranslation('translation', { keyPrefix: 'modals.removeChannel' });
   const { removeChannel, notify } = useApi();
 
   return (
-    <Modal show>
-      <Modal.Header closeButton onHide={onHide}>
+    <>
+      <Modal.Header closeButton onHide={handleCloseModal}>
         <Modal.Title>{t('remove channel')}</Modal.Title>
       </Modal.Header>
 
@@ -20,7 +20,7 @@ const RemoveChannelModal = ({ items, onHide }) => {
             className="me-2"
             type="button"
             variant="secondary"
-            onClick={() => onHide()}
+            onClick={() => handleCloseModal()}
           >
             {t('cancel')}
           </Button>
@@ -29,7 +29,7 @@ const RemoveChannelModal = ({ items, onHide }) => {
             variant="danger"
             onClick={() => {
               removeChannel(items.id);
-              onHide();
+              handleCloseModal();
               notify(t('channel is removed'));
             }}
           >
@@ -37,7 +37,7 @@ const RemoveChannelModal = ({ items, onHide }) => {
           </Button>
         </div>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 
