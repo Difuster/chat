@@ -6,7 +6,7 @@ import Channels from './Channels';
 import Messages from './Messages';
 import Loader from '../Loader';
 import {
-  actions as channelActions, selectAllChannels, selectCurrentChannelId, selectCurrentChannelName
+  actions as channelActions, selectAllChannels, selectCurrentChannelId, selectCurrentChannelName,
 } from '../../slices/channelsSlice.js';
 import { fetchContent, selectFetchStatus } from '../../slices/fetchingSlice.js';
 import { useAuth } from '../../contexts/authContext.jsx';
@@ -18,7 +18,7 @@ function MainPage() {
 
   useEffect(() => {
     dispatch(fetchContent(getAuthHeader));
-  }, [dispatch]);
+  }, [dispatch, getAuthHeader]);
 
   const fetchStatus = useSelector(selectFetchStatus);
   const channels = useSelector(selectAllChannels);
