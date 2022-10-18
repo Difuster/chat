@@ -5,7 +5,7 @@ const initialState = {
   currentChannel: {
     id: 1,
     name: 'general',
-  }
+  },
 };
 
 const channelsSlice = createSlice({
@@ -14,10 +14,6 @@ const channelsSlice = createSlice({
   reducers: {
     loadChannels: (state, action) => {
       state.channels = action.payload;
-      // return {
-      //   ...state,
-      //   channels: action.payload,
-      // };
     },
     getCurrentChannel: (state, action) => {
       const currentChannel = state.channels.find((channel) => channel.id === action.payload);
@@ -34,7 +30,6 @@ const channelsSlice = createSlice({
     },
     removeChannel: (state, action) => {
       const newChannels = state.channels.filter((channel) => channel.id !== action.payload);
-      // Object.assign(state, { channels: newChannels });
       state.channels = newChannels;
       if (state.currentChannel.id === action.payload) {
         Object.assign(state.currentChannel, { id: 1 });
@@ -44,7 +39,6 @@ const channelsSlice = createSlice({
       state.channels.forEach((channel) => {
         if (channel.id === action.payload.id) {
           channel.name = action.payload.name;
-          // Object.assign(channel, { name: action.payload.name });
         }
       });
     },

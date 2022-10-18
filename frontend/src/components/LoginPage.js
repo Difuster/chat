@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Link, useLocation, useNavigate, Navigate
-} from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Button, Form, Card, Container, Row, Col,
 } from 'react-bootstrap';

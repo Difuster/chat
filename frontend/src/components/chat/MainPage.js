@@ -1,39 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row } from 'react-bootstrap';
-
-import axios from 'axios';
 
 import Channels from './Channels';
 import Messages from './Messages';
 import Loader from '../Loader';
 import { actions as channelActions } from '../../slices/channelsSlice.js';
-import { actions as messageActions } from '../../slices/messagesSlice.js';
+import { fetchContent } from '../../slices/fetchingSlice.js';
 import { useAuth } from '../../contexts/authContext.jsx';
-import routes from '../../routes';
 
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { loggedIn, getAuthHeader } = useAuth();
-  const [response, setResponse] = useState(false);
+  const { getAuthHeader } = useAuth();
+  const fetchStatus = useSelector((state) => state.fetching.status);
 
   useEffect(() => {
-    const fetchContent = async () => {
-      if (loggedIn) {
-        const { data } = await axios.get(routes.dataPath(), { headers: getAuthHeader() });
-        setResponse(true);
-        dispatch(channelActions.loadChannels(data.channels));
-        dispatch(channelActions.getCurrentChannel(data.currentChannelId));
-        dispatch(messageActions.loadMessages(data.messages));
-      } else {
-        console.log(loggedIn);
-      }
-    };
-
-    fetchContent();
-  }, [loggedIn, dispatch, getAuthHeader]);
+    dispatch(fetchContent(getAuthHeader));
+  }, [dispatch]);
 
   const channels = useSelector((state) => state.channels.channels);
   const currentChannelId = useSelector((state) => state.channels.currentChannel.id);
@@ -45,7 +29,7 @@ function MainPage() {
     return name;
   };
 
-  if (loggedIn && !response) {
+  if (fetchStatus === 'loading') {
     return <Loader />;
   }
 

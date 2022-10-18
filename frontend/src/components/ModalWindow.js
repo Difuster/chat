@@ -20,11 +20,12 @@ const ModalWindow = () => {
   return (
     <Modal show={isShown} onHide={handleCloseModal}>
       {CurrentModal && (
-      <CurrentModal
-        handleCloseModal={handleCloseModal}
-        channels={channels}
-        items={items}
-      />)}
+        <CurrentModal
+          handleCloseModal={handleCloseModal}
+          channels={channels}
+          items={items}
+        />
+      )}
     </Modal>
   );
 };

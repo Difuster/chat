@@ -76,14 +76,14 @@ export default async () => {
 
     return (
       <ApiContext.Provider value={value}>
-          { children }
+        { children }
         <ToastContainer autoClose={3000} />
       </ApiContext.Provider>
     );
   };
 
   const rollbarConfig = {
-    accessToken: '55b0aef0252044e2876f048d158633f0',
+    accessToken: process.env.ROLLBAR_TOKEN,
     captureUncaught: true,
     captureUnhandledRejections: true,
     payload: {
