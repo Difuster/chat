@@ -2,13 +2,14 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import showModal from '../modal/index.js';
-import { actions as modalActions } from '../slices/modalsSlice.js';
+import { actions as modalActions, selectModalItems, selectIsModalShown } from '../slices/modalsSlice.js';
+import { selectAllChannels } from '../slices/channelsSlice.js';
 
 const ModalWindow = () => {
-  const isShown = useSelector((state) => state.modals.isShown);
-  const items = useSelector((state) => state.modals.items);
-  const { type } = items;
-  const channels = useSelector((state) => state.channels.channels);
+  const isShown = useSelector(selectIsModalShown);
+  const items = useSelector(selectModalItems);
+  const { type } = useSelector(selectModalItems);
+  const channels = useSelector(selectAllChannels);
   const dispatch = useDispatch();
 
   const handleCloseModal = () => {

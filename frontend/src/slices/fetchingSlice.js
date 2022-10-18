@@ -43,6 +43,8 @@ const fetchingSlice = createSlice({
   },
 });
 
+export const selectFetchStatus = (state) => state.fetching.status;
+
 export const { actions } = fetchingSlice;
 
 export default fetchingSlice.reducer;

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
 import { useApi } from '../../contexts/apiContext.jsx';
+import { selectAllMessages } from '../../slices/messagesSlice.js';
 import sendMessageIcon from '../../imgs/send_message.png';
 
 const renderMessages = (msgs) => msgs.map((m) => (
@@ -27,7 +28,7 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
 
   const { sendMessage } = useApi();
 
-  const messages = useSelector((state) => state.messages.messages);
+  const messages = useSelector(selectAllMessages);
   const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
   const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
 

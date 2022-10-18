@@ -5,23 +5,25 @@ import { Container, Row } from 'react-bootstrap';
 import Channels from './Channels';
 import Messages from './Messages';
 import Loader from '../Loader';
-import { actions as channelActions } from '../../slices/channelsSlice.js';
-import { fetchContent } from '../../slices/fetchingSlice.js';
+import {
+  actions as channelActions, selectAllChannels, selectCurrentChannelId, selectCurrentChannelName
+} from '../../slices/channelsSlice.js';
+import { fetchContent, selectFetchStatus } from '../../slices/fetchingSlice.js';
 import { useAuth } from '../../contexts/authContext.jsx';
 
 function MainPage() {
   const dispatch = useDispatch();
 
   const { getAuthHeader } = useAuth();
-  const fetchStatus = useSelector((state) => state.fetching.status);
 
   useEffect(() => {
     dispatch(fetchContent(getAuthHeader));
   }, [dispatch]);
 
-  const channels = useSelector((state) => state.channels.channels);
-  const currentChannelId = useSelector((state) => state.channels.currentChannel.id);
-  const currentChannelName = useSelector((state) => state.channels.currentChannel.name);
+  const fetchStatus = useSelector(selectFetchStatus);
+  const channels = useSelector(selectAllChannels);
+  const currentChannelId = useSelector(selectCurrentChannelId);
+  const currentChannelName = useSelector(selectCurrentChannelName);
 
   const getUserName = () => {
     const userId = localStorage.getItem('userId');

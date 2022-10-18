@@ -28,6 +28,10 @@ const modalsSlice = createSlice({
   },
 });
 
+const selectModalItems = (state) => state.modals.items;
+const selectIsModalShown = (state) => state.modals.isShown;
+
+export { selectModalItems, selectIsModalShown };
 export const { actions } = modalsSlice;
 
 export default modalsSlice.reducer;
