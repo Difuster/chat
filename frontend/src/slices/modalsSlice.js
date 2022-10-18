@@ -14,16 +14,16 @@ const modalsSlice = createSlice({
   initialState,
   reducers: {
     openModal: (state, action) => {
-      state.items.type = action.payload.type;
-      state.items.id = action.payload.id;
-      state.items.name = action.payload.name;
-      state.isShown = true;
+      Object.assign(state.items, { type: action.payload.type });
+      Object.assign(state.items, { id: action.payload.id });
+      Object.assign(state.items, { name: action.payload.name });
+      Object.assign(state, { isShown: true });
     },
     closeModal: (state, action) => {
-      state.items.type = action.payload.type;
-      state.items.id = action.payload.id;
-      state.items.name = action.payload.name;
-      state.isShown = false;
+      Object.assign(state.items, { type: action.payload.type });
+      Object.assign(state.items, { id: action.payload.id });
+      Object.assign(state.items, { name: action.payload.name });
+      Object.assign(state, { isShown: false });
     },
   },
 });

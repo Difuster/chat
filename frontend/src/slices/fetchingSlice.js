@@ -29,16 +29,16 @@ const fetchingSlice = createSlice({
   initialState,
   extraReducers: {
     [fetchContent.pending]: (state) => {
-      state.status = 'loading';
-      state.error = null;
+      Object.assign(state, { status: 'loading' });
+      Object.assign(state, { error: null });
     },
     [fetchContent.fulfilled]: (state) => {
-      state.status = 'resolved';
-      state.error = null;
+      Object.assign(state, { status: 'resolved' });
+      Object.assign(state, { error: null });
     },
     [fetchContent.rejected]: (state, action) => {
-      state.status = 'rejected';
-      state.error = action.payload;
+      Object.assign(state, { status: 'rejected' });
+      Object.assign(state, { error: action.payload });
     },
   },
 });

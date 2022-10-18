@@ -10,7 +10,7 @@ const messagesSlice = createSlice({
   initialState,
   reducers: {
     loadMessages: (state, action) => {
-      state.messages = action.payload;
+      Object.assign(state, { messages: action.payload });
     },
     addMessage: (state, action) => {
       state.messages.push(action.payload);
@@ -20,7 +20,7 @@ const messagesSlice = createSlice({
     builder.addCase(channelActions.removeChannel, (state, action) => {
       const channelId = action.payload;
       const restEntities = state.messages.filter((item) => item.channelId !== channelId);
-      state.messages = restEntities;
+      Object.assign(state, { messages: restEntities });
     });
   },
 });
