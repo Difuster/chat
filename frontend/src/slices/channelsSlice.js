@@ -30,7 +30,7 @@ const channelsSlice = createSlice({
     },
     removeChannel: (state, action) => {
       const newChannels = state.channels.filter((channel) => channel.id !== action.payload);
-      state.channels = newChannels;
+      Object.assign(state, { channels: newChannels });
       if (state.currentChannel.id === action.payload) {
         Object.assign(state.currentChannel, { id: 1 });
       }
@@ -38,7 +38,7 @@ const channelsSlice = createSlice({
     renameChannel: (state, action) => {
       state.channels.forEach((channel) => {
         if (channel.id === action.payload.id) {
-          channel.name = action.payload.name;
+          Object.assign(channel, { name: action.payload.name });
         }
       });
     },
