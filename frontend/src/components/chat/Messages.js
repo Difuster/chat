@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import filter from 'leo-profanity';
 import { useApi } from '../../contexts/apiContext.jsx';
-import { selectAllMessages } from '../../slices/messagesSlice.js';
+import { selectAllMessages, selectCurrentChannelMessages } from '../../slices/messagesSlice.js';
 import sendMessageIcon from '../../imgs/send_message.png';
 
 const renderMessages = (msgs) => msgs.map((m) => (
@@ -20,7 +20,7 @@ const renderMessages = (msgs) => msgs.map((m) => (
   </div>
 ));
 
-function Messages({ currentChannelId, currentChannelName, getUserName }) {
+function Messages({ currentChannelId, currentChannelName, name }) {
   const scrollToBottom = (el) => {
     const height = el.current.scrollHeight;
     el.current.scroll(0, height);
@@ -29,8 +29,7 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
   const { sendMessage } = useApi();
 
   const messages = useSelector(selectAllMessages);
-  const getCurrentChannelMessages = (msgs, currId) => msgs.filter((m) => m.channelId === currId);
-  const currentChannelMessages = getCurrentChannelMessages(messages, currentChannelId);
+  const currentChannelMessages = useSelector(selectCurrentChannelMessages);
 
   const messagesBox = useRef(null);
   const inputRef = useRef();
@@ -44,7 +43,7 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
     onSubmit: (values) => {
       const messageData = {
         value: values.message,
-        user: getUserName(),
+        user: name,
         channelId: currentChannelId,
       };
       sendMessage(messageData);
@@ -61,12 +60,8 @@ function Messages({ currentChannelId, currentChannelName, getUserName }) {
   }, [messages, currentChannelId]);
 
   useEffect(() => {
-    const trimmedText = formik.values.message.trim();
-    if (trimmedText.length > 0) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
+    const isDisabled = formik.values.message.trim().length === 0;
+    setDisabled(isDisabled);
   }, [formik.values.message]);
 
   return (

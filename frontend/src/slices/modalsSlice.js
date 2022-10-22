@@ -9,24 +9,30 @@ const initialState = {
   isShown: false,
 };
 
+/* eslint-disable no-param-reassign */
 const modalsSlice = createSlice({
   name: 'modals',
   initialState,
   reducers: {
     openModal: (state, action) => {
-      Object.assign(state.items, { type: action.payload.type });
-      Object.assign(state.items, { id: action.payload.id });
-      Object.assign(state.items, { name: action.payload.name });
-      Object.assign(state, { isShown: true });
+      state.items = {
+        type: action.payload.type,
+        id: action.payload.id,
+        name: action.payload.name
+      };
+      state.isShown = true;
     },
     closeModal: (state, action) => {
-      Object.assign(state.items, { type: action.payload.type });
-      Object.assign(state.items, { id: action.payload.id });
-      Object.assign(state.items, { name: action.payload.name });
-      Object.assign(state, { isShown: false });
+      state.items = {
+        type: action.payload.type,
+        id: action.payload.id,
+        name: action.payload.name
+      };
+      state.isShown = false;
     },
   },
 });
+/* eslint-enable no-param-reassign */
 
 const selectModalItems = (state) => state.modals.items;
 const selectIsModalShown = (state) => state.modals.isShown;

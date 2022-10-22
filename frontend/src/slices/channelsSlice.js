@@ -8,16 +8,19 @@ const initialState = {
   },
 };
 
+/* eslint-disable no-param-reassign */
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,
   reducers: {
     loadChannels: (state, action) => {
-      Object.assign(state, { channels: action.payload });
+      state.channels = action.payload.channels;
+      state.currentChannel.id = action.payload.currentChannelId;
     },
     getCurrentChannel: (state, action) => {
       const currentChannel = state.channels.find((channel) => channel.id === action.payload);
-      Object.assign(state.currentChannel, { id: action.payload, name: currentChannel.name });
+      state.currentChannel.id = action.payload;
+      state.currentChannel.name = currentChannel.name;
     },
     addChannel: (state, action) => {
       const newChannel = {
@@ -26,24 +29,25 @@ const channelsSlice = createSlice({
         removable: true,
       };
       state.channels.push(newChannel);
-      Object.assign(state.currentChannel, { id: newChannel.id });
+      state.currentChannel.id = newChannel.id;
     },
     removeChannel: (state, action) => {
       const newChannels = state.channels.filter((channel) => channel.id !== action.payload);
-      Object.assign(state, { channels: newChannels });
+      state.channels = newChannels;
       if (state.currentChannel.id === action.payload) {
-        Object.assign(state.currentChannel, { id: 1 });
+        state.currentChannel.id = 1;
       }
     },
     renameChannel: (state, action) => {
       state.channels.forEach((channel) => {
         if (channel.id === action.payload.id) {
-          Object.assign(channel, { name: action.payload.name });
+          channel.name = action.payload.name;
         }
       });
     },
   },
 });
+/* eslint-enable no-param-reassign */
 
 const selectAllChannels = (state) => state.channels.channels;
 const selectCurrentChannelId = (state) => state.channels.currentChannel.id;

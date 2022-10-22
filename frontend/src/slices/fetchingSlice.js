@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { actions as channelActions } from './channelsSlice';
-import { actions as messageActions } from './messagesSlice';
 import routes from '../routes';
 
 export const fetchContent = createAsyncThunk(
@@ -9,9 +8,7 @@ export const fetchContent = createAsyncThunk(
   async (getHeaders, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.get(routes.dataPath(), { headers: getHeaders() });
-      dispatch(channelActions.loadChannels(data.channels));
-      dispatch(messageActions.loadMessages(data.messages));
-      dispatch(channelActions.getCurrentChannel(data.currentChannelId));
+      dispatch(channelActions.loadChannels(data));
       return data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -24,24 +21,26 @@ const initialState = {
   error: null,
 };
 
+/* eslint-disable no-param-reassign */
 const fetchingSlice = createSlice({
   name: 'fetching',
   initialState,
   extraReducers: {
     [fetchContent.pending]: (state) => {
-      Object.assign(state, { status: 'loading' });
-      Object.assign(state, { error: null });
+      state.status = 'loading';
+      state.error = null;
     },
     [fetchContent.fulfilled]: (state) => {
-      Object.assign(state, { status: 'resolved' });
-      Object.assign(state, { error: null });
+      state.status = 'resolved';
+      state.error = null;
     },
     [fetchContent.rejected]: (state, action) => {
-      Object.assign(state, { status: 'rejected' });
-      Object.assign(state, { error: action.payload });
+      state.status = 'rejected';
+      state.error = action.payload;
     },
   },
 });
+/* eslint-enable no-param-reassign */
 
 export const selectFetchStatus = (state) => state.fetching.status;
 
