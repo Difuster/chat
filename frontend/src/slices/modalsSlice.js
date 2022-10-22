@@ -18,7 +18,7 @@ const modalsSlice = createSlice({
       state.items = {
         type: action.payload.type,
         id: action.payload.id,
-        name: action.payload.name
+        name: action.payload.name,
       };
       state.isShown = true;
     },
@@ -26,7 +26,7 @@ const modalsSlice = createSlice({
       state.items = {
         type: action.payload.type,
         id: action.payload.id,
-        name: action.payload.name
+        name: action.payload.name,
       };
       state.isShown = false;
     },
