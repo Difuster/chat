@@ -35,7 +35,7 @@ const selectCurrentChannelMessages = createSelector(
     }
 
     return allMessages.filter((message) => message.channelId === currentChannelId);
-  }
+  },
 );
 
 export const { actions } = messagesSlice;

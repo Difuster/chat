@@ -37,7 +37,7 @@ const channelsSlice = createSlice({
     },
     renameChannel: (state, action) => {
       state.channels.find((channel) => channel.id === action.payload.id).name = action.payload.name;
-    }
+    },
   },
 });
 /* eslint-enable no-param-reassign */
@@ -52,7 +52,7 @@ const selectCurrentChannelName = createSelector(
     }
     const currentChannel = allChannels.find((channel) => channel.id === currentChannelId);
     return currentChannel.name;
-  }
+  },
 );
 
 export const { actions } = channelsSlice;
