@@ -1,10 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
   channels: [],
   currentChannel: {
     id: 1,
-    name: 'general',
   },
 };
 
@@ -17,10 +16,8 @@ const channelsSlice = createSlice({
       state.channels = action.payload.channels;
       state.currentChannel.id = action.payload.currentChannelId;
     },
-    getCurrentChannel: (state, action) => {
-      const currentChannel = state.channels.find((channel) => channel.id === action.payload);
+    setCurrentChannel: (state, action) => {
       state.currentChannel.id = action.payload;
-      state.currentChannel.name = currentChannel.name;
     },
     addChannel: (state, action) => {
       const newChannel = {
@@ -39,19 +36,24 @@ const channelsSlice = createSlice({
       }
     },
     renameChannel: (state, action) => {
-      state.channels.forEach((channel) => {
-        if (channel.id === action.payload.id) {
-          channel.name = action.payload.name;
-        }
-      });
-    },
+      state.channels.find((channel) => channel.id === action.payload.id).name = action.payload.name;
+    }
   },
 });
 /* eslint-enable no-param-reassign */
 
 const selectAllChannels = (state) => state.channels.channels;
 const selectCurrentChannelId = (state) => state.channels.currentChannel.id;
-const selectCurrentChannelName = (state) => state.channels.currentChannel.name;
+const selectCurrentChannelName = createSelector(
+  [selectAllChannels, selectCurrentChannelId],
+  (allChannels, currentChannelId) => {
+    if (allChannels.length === 0) {
+      return null;
+    }
+    const currentChannel = allChannels.find((channel) => channel.id === currentChannelId);
+    return currentChannel.name;
+  }
+);
 
 export const { actions } = channelsSlice;
 export { selectAllChannels, selectCurrentChannelId, selectCurrentChannelName };

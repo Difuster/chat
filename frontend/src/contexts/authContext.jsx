@@ -3,30 +3,28 @@ import React, { useState, createContext, useContext } from 'react';
 const AuthContext = createContext({});
 
 const AuthContextProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('userId'));
+  const [user, setUser] = useState(null);
 
   const getAuthHeader = () => {
-    const userId = JSON.parse(loggedIn);
-
-    if (userId && userId.token) {
-      return { Authorization: `Bearer ${userId.token}` };
+    if (user && user.token) {
+      return { Authorization: `Bearer ${user.token}` };
     }
 
     return {};
   };
 
   const logIn = (data) => {
-    localStorage.setItem('userId', JSON.stringify(data));
-    setLoggedIn(localStorage.getItem('userId'));
+    localStorage.setItem('userData', JSON.stringify(data));
+    setUser({ token: data.token, userName: data.username });
   };
 
   const logOut = () => {
-    localStorage.removeItem('userId');
-    setLoggedIn(localStorage.getItem('userId'));
+    localStorage.removeItem('userData');
+    setUser(null);
   };
 
   const value = {
-    loggedIn,
+    user,
     logIn,
     logOut,
     getAuthHeader,

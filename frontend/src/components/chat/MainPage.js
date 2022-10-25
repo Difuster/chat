@@ -14,7 +14,7 @@ import { useAuth } from '../../contexts/authContext.jsx';
 function MainPage() {
   const dispatch = useDispatch();
 
-  const { getAuthHeader, loggedIn } = useAuth();
+  const { getAuthHeader, user } = useAuth();
 
   useEffect(() => {
     dispatch(fetchContent(getAuthHeader));
@@ -24,8 +24,7 @@ function MainPage() {
   const channels = useSelector(selectAllChannels);
   const currentChannelId = useSelector(selectCurrentChannelId);
   const currentChannelName = useSelector(selectCurrentChannelName);
-
-  const name = JSON.parse(loggedIn).username;
+  const name = user.userName;
 
   if (fetchStatus === 'loading') {
     return <Loader />;
@@ -38,7 +37,7 @@ function MainPage() {
         <Channels
           channels={channels}
           currentChannelId={currentChannelId}
-          getCurrentChannel={channelActions.getCurrentChannel}
+          setCurrentChannel={channelActions.setCurrentChannel}
         />
 
         <Messages

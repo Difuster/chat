@@ -18,7 +18,7 @@ function Header() {
             {t('logo')}
           </Link>
         </Navbar.Brand>
-        {auth.loggedIn
+        {auth.user
           ? <Button variant="primary" onClick={() => auth.logOut()}>{t('logout')}</Button>
           : null}
       </Container>

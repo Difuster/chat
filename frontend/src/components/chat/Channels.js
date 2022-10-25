@@ -7,7 +7,7 @@ import { actions as modalActions } from '../../slices/modalsSlice.js';
 import ModalWindow from '../ModalWindow.js';
 
 function Channels({
-  channels, currentChannelId, getCurrentChannel,
+  channels, currentChannelId, setCurrentChannel,
 }) {
   const { t } = useTranslation('translation', { keyPrefix: 'channels' });
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ function Channels({
           <Button
             className="w-100 rounded-0 text-start text-truncate"
             variant={variant}
-            onClick={() => dispatch(getCurrentChannel(channel.id))}
+            onClick={() => dispatch(setCurrentChannel(channel.id))}
             style={{ overflow: 'hidden' }}
           >
             #

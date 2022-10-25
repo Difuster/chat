@@ -26,14 +26,14 @@ function SignUpPage() {
 
   const schema = yup.object({
     username: yup.string()
-      .required(t('errors.required field'))
-      .min(3, t('errors.username must be at least 3 characters'))
-      .max(20, t('errors.username must be max 20 characters')),
+      .required('required field')
+      .min(3, 'username must be at least 3 characters')
+      .max(20, 'username must be max 20 characters'),
     password: yup.string()
-      .required(t('errors.required field'))
-      .min(6, t('errors.min pass characters')),
+      .required('required field')
+      .min(6, 'min pass characters'),
     passConfirmation: yup.string()
-      .oneOf([yup.ref('password')], t('errors.oneOf')),
+      .oneOf([yup.ref('password')], 'oneOf'),
   });
 
   const formik = useFormik({
@@ -109,7 +109,7 @@ function SignUpPage() {
                                 { display: 'block' }
                               }
                             >
-                              {formik.errors.username}
+                              {t(`errors.${formik.errors.username}`)}
                             </Form.Control.Feedback>
                           )
                           : null
@@ -137,7 +137,7 @@ function SignUpPage() {
                                 { display: 'block' }
                               }
                             >
-                              {formik.errors.password}
+                              {t(`errors.${formik.errors.password}`)}
                             </Form.Control.Feedback>
                           )
                           : null
@@ -165,7 +165,7 @@ function SignUpPage() {
                                 { display: 'block' }
                               }
                             >
-                              {formik.errors.passConfirmation}
+                              {t(`errors.${formik.errors.passConfirmation}`)}
                             </Form.Control.Feedback>
                           )
                           : null

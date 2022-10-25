@@ -11,25 +11,25 @@ import SignUpPage from './SignUpPage';
 import NotFoundPage from './NotFoundPage';
 
 function App() {
-  const PathIfLoggedIn = ({ children }) => {
-    const { loggedIn } = useAuth();
+  const PathIfuser = ({ children }) => {
+    const { user } = useAuth();
 
-    return loggedIn ? children : <Navigate replace to="/login" />;
+    return user ? children : <Navigate replace to="/login" />;
   };
 
-  const PathIfNotLoggedIn = ({ children }) => {
-    const { loggedIn } = useAuth();
+  const PathIfNotuser = ({ children }) => {
+    const { user } = useAuth();
 
-    return !loggedIn ? children : <Navigate replace to="/" />;
+    return !user ? children : <Navigate replace to="/" />;
   };
 
   return (
     <div className="d-flex flex-column h-100 bg-light">
       <Header />
       <Routes>
-        <Route exact path="/" element={<PathIfLoggedIn><MainPage /></PathIfLoggedIn>} />
-        <Route path="/login" element={<PathIfNotLoggedIn><LoginPage /></PathIfNotLoggedIn>} />
-        <Route path="/signup" element={<PathIfNotLoggedIn><SignUpPage /></PathIfNotLoggedIn>} />
+        <Route exact path="/" element={<PathIfuser><MainPage /></PathIfuser>} />
+        <Route path="/login" element={<PathIfNotuser><LoginPage /></PathIfNotuser>} />
+        <Route path="/signup" element={<PathIfNotuser><SignUpPage /></PathIfNotuser>} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
